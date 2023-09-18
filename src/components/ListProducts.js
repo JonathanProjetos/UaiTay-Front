@@ -7,13 +7,19 @@ import Calculate from './Calculate'
 function ListProducts({products}) {
   const [list, setList] = useState([]);
   return (
-    <Box>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'end',
+        flexDirection: 'row',
+      }}
+    >
       <Box
         sx={{
         display: 'flex',
         justifyContent: 'center',
         marginBottom: '20vh',
-        marginRight: '25vw',
+        marginRight: '30vw',
         flexWrap: 'wrap',
         '& > :not(style)': {
           m: 2,
