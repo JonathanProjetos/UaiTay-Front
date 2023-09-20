@@ -1,8 +1,15 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
+import NewProduct from '../components/NewProduct'
+import Box from '@mui/material/Box'
+
 
 function Settings() {
   return (
-    <div>Settings</div>
+    <Box>
+      Settings
+      <NewProduct/>
+    </Box>
   )
 }
 
