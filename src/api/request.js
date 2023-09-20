@@ -6,8 +6,12 @@ const api = axios.create({
 });
 
 export const requestMenuProducts = async () => {
-  const { data } = await api.get('menu')
-  return data;
+  try {   
+    const { data } = await api.get('menu')
+    return data;
+  } catch (err) {
+    return err;
+  }
 }
 
 export const requestLogin = async (email, password) => {
@@ -25,6 +29,15 @@ export const requestLogin = async (email, password) => {
     return err;
   }
 
+}
+
+export const createProduct = async (product) => {
+  try {
+    const { data } = await api.post('create-product', product);
+    return data;
+  } catch (err) {
+    return err;
+  }
 }
 
 export default api;
