@@ -11,7 +11,6 @@ function NewProduct() {
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [category, setCategory] = useState('')
-  const [data, setData] = useState({})
 
   const clickCreateProduct = async () => {    
     const convertPrice = Number(price)
@@ -24,19 +23,14 @@ function NewProduct() {
 
     const result = await createProduct(newObject)
 
-    setData(result)
-
-    console.log(data);
-
-    if (data._id) {
+    if (result._id) {
       toast.success('Produto adicionado com sucesso', {
           position: 'bottom-center',
           autoClose: 4000,
       })
 
     } else {
-      console.log(data.message);
-      toast.error('Error', {
+      toast.error(`${result.response.status} | ${result.response.data.error}`, {
         position: 'bottom-center',
         autoClose: 4000,
       })
@@ -50,9 +44,9 @@ function NewProduct() {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        width:"98vw",
-        height:"30vh",
-        backgroundColor: 'blue',
+        width:"100vw",
+        // height:"30vh",
+        backgroundColor: '#1976d2',
       }}
     > 
       <Typography
@@ -63,7 +57,7 @@ function NewProduct() {
           alignItems: 'top',
           color: 'white',
           fontWeight: 'bold',
-          fontSize: '5vh'
+          fontSize: '4vh'
         }}
       >
         Adicionar novos produtos para o menu
@@ -122,9 +116,10 @@ function NewProduct() {
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: '20px',
-            width: '10vw',
+            width: '110px',
             border: 'solid 4px white',
             marginTop: '3vh',
+            marginBottom: '3vh',
             padding: '1vh',
           }}
           onClick={() => clickCreateProduct()}
