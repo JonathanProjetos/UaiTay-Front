@@ -1,9 +1,17 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL:`https://calculadora-uaitay-production.up.railway.app/`
+  baseURL:`https://calculadora-uaitay-production.up.railway.app/`,
+  withCredentials: true,
   // baseURL:`http://localhost:3001/`
 });
+
+export const verifyToken = async () => {
+
+  const { data } = await api.get('login/validate');
+  
+  return data; 
+}
 
 export const requestMenuProducts = async () => {
   try {   
@@ -20,8 +28,6 @@ export const requestLogin = async (email, password) => {
       email,
       password
     })
-  
-    console.log(data);
   
     return data;
 
