@@ -26,6 +26,8 @@ export const requestLogin = async (email, password) => {
       email,
       password
     })
+
+    Cookies.set("token", data.token);
   
     return data;
 
