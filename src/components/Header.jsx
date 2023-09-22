@@ -22,9 +22,9 @@ function Header() {
         position: 'bottom-center',
         autoClose: 4000,
       })
-      setInterval(() => {
-        router.push('/settings')
-      }, 4000);
+      router.push('/settings')
+      // setInterval(() => {
+      // }, 4000);
 
     } else {
       toast.error('Login ou senha incorretos', {
