@@ -3,13 +3,13 @@ import axios from "axios";
 const api = axios.create({
   withCredentials: true,
   baseURL:`https://calculadora-uaitay-production.up.railway.app/`,
+  // baseURL:`http://localhost:3001/`,
 });
 
 export const verifyToken = async () => {
   const { data } = await api.get('login/validate');
-  console.log("loga aqui", data);
   return data; 
-}
+} 
 
 export const requestMenuProducts = async () => {
   try {   
