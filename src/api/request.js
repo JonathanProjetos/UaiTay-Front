@@ -2,7 +2,7 @@ import axios from "axios";
 
 const api = axios.create({
   withCredentials: true,
-  baseURL:`https://calculadora-uaitay-production.up.railway.app/`,
+  baseURL:`https://calculadora-uaitay-production.up.railway.app`,
   // baseURL:`http://localhost:3001/`,
 });
 
