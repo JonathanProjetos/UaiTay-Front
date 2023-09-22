@@ -45,7 +45,6 @@ function NewProduct() {
         justifyContent: 'center',
         alignItems: 'center',
         width:"100vw",
-        // height:"30vh",
         backgroundColor: '#1976d2',
       }}
     > 
@@ -57,7 +56,8 @@ function NewProduct() {
           alignItems: 'top',
           color: 'white',
           fontWeight: 'bold',
-          fontSize: '4vh'
+          fontSize: '4vh',
+          textAlign: 'center',
         }}
       >
         Adicionar novos produtos para o menu
