@@ -1,15 +1,13 @@
 import axios from "axios";
 
 const api = axios.create({
-  // baseURL:`https://calculadora-uaitay-production.up.railway.app/`,
+  baseURL:`https://calculadora-uaitay-production.up.railway.app/`,
   withCredentials: true,
-  baseURL:`http://localhost:3001/`
 });
 
 export const verifyToken = async () => {
-
   const { data } = await api.get('login/validate');
-  
+  console.log("loga aqui", data);
   return data; 
 }
 
