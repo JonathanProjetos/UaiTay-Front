@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL:`https://calculadora-uaitay-production.up.railway.app/`,
   withCredentials: true,
+  baseURL:`https://calculadora-uaitay-production.up.railway.app/`,
 });
 
 export const verifyToken = async () => {
