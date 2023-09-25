@@ -3,8 +3,9 @@ import Cookies from "js-cookie";
 
 const api = axios.create({
   withCredentials: true,
-  baseURL:`https://calculadora-uaitay-production.up.railway.app`,
-  // baseURL:`http://localhost:3001/`,
+  
+  // baseURL:`https://calculadora-uaitay-production.up.railway.app`,
+  baseURL:`http://localhost:3001/`,
 });
 
 export const verifyToken = async () => {
@@ -27,8 +28,7 @@ export const requestLogin = async (email, password) => {
       email,
       password
     })
-
-    Cookies.set("token", data.token);
+    // Cookies.set("token", data.token);
   
     return data;
 

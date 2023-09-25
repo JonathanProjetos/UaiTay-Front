@@ -13,10 +13,10 @@ function Settings() {
 
   const auth = async () => {
     try {
-      await verifyToken()
-      console.log('useEffect');
+     const test =  await verifyToken()
+      console.log('useEffect', test);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       toast.error('Você não tem autorização para acessar essa página', {
         position: 'bottom-center',
         autoClose: 4000,
