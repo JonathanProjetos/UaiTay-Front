@@ -8,6 +8,21 @@ const api = axios.create({
   baseURL:`http://localhost:3001/`,
 });
 
+export const requestLogin = async (email, password) => {
+  try {
+    const { data } = await api.post('login', {
+      email,
+      password
+    })
+  
+    return data;
+
+  } catch (err) {
+    return err;
+  }
+
+}
+
 export const verifyToken = async () => {
   const { data } = await api.get('login/validate');
   return data; 
@@ -22,21 +37,6 @@ export const requestMenuProducts = async () => {
   }
 }
 
-export const requestLogin = async (email, password) => {
-  try {
-    const { data } = await api.post('login', {
-      email,
-      password
-    })
-    // Cookies.set("token", data.token);
-  
-    return data;
-
-  } catch (err) {
-    return err;
-  }
-
-}
 
 export const createProduct = async (product) => {
   try {
