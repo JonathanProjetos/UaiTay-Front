@@ -1,11 +1,9 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 
 const api = axios.create({
   withCredentials: true,
-  
-  // baseURL:`https://calculadora-uaitay-production.up.railway.app`,
-  baseURL:`http://localhost:3001/`,
+  baseURL:`https://calculadora-uaitay-production.up.railway.app`,
+  // baseURL:`http://localhost:3001/`,
 });
 
 export const requestLogin = async (email, password) => {
@@ -36,7 +34,6 @@ export const requestMenuProducts = async () => {
     return err;
   }
 }
-
 
 export const createProduct = async (product) => {
   try {
