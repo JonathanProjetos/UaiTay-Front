@@ -13,8 +13,7 @@ function Settings() {
 
   const auth = async () => {
     try {
-     const test =  await verifyToken()
-      console.log('useEffect', test);
+      await verifyToken()
     } catch (error) {
       // console.error(error);
       toast.error('Você não tem autorização para acessar essa página', {
