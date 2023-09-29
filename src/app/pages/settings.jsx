@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/navigation';
 import NewProduct from '../../components/NewProduct'
+import DeleteProduct from '@/components/DeleteProduct';
 import Logout from '../../components/Logout';
 import Box from '@mui/material/Box'
 import { verifyToken } from '../../api/request'
@@ -33,6 +34,7 @@ function Settings() {
     <Box>
       <Logout/>
       <NewProduct/>
+      <DeleteProduct/>
     </Box>
   )
 }
