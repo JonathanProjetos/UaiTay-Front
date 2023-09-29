@@ -60,7 +60,7 @@ function NewProduct() {
           textAlign: 'center',
         }}
       >
-        Adicionar novos produtos para o menu
+        Adicionar um novo produto para o menu
       </Typography>
 
       <Box
