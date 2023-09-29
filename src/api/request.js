@@ -12,7 +12,7 @@ export const requestLogin = async (email, password) => {
       email,
       password
     })
-  
+    
     return data;
 
   } catch (err) {
@@ -39,6 +39,15 @@ export const createProduct = async (product) => {
   try {
     const { data } = await api.post('create-product', product);
     return data;
+  } catch (err) {
+    return err;
+  }
+}
+
+export const deleteProduct = async (name) => {
+  try {
+   const { data } = await api.delete(`delete-product`, { data: { name } } );
+   return data;
   } catch (err) {
     return err;
   }
