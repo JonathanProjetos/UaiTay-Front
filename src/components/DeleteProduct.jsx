@@ -4,9 +4,8 @@ import { toast } from 'react-toastify'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Input from '@mui/material/Input'
-import ButtonBase from '@mui/material/ButtonBase'
 import { deleteProduct } from '../api/request'
-import ModalConfirmDelete from '../util/ModalConfirmDelete'
+import ModalConfirmAction from '../util/ModalConfirmAction'
 
 
 function DeleteProduct() {
@@ -91,7 +90,7 @@ function DeleteProduct() {
             fontSize: '3vh',
           }}
         />
-        <ModalConfirmDelete name={nameProduct} clickDeleteProduct={clickDeleteProduct}/>
+        <ModalConfirmAction nameButton="Deletar" nameProduct={nameProduct} clickDeleteProduct={clickDeleteProduct}/>
       </Box>
     </Box>
   )
