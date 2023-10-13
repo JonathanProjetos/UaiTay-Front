@@ -5,7 +5,9 @@ import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 import Input from '@mui/material/Input';
 
-function ModalConfirmDelete({ name, clickDeleteProduct }) {
+function ModalConfirmAction({ nameButton, nameProduct, handleClick }) {
+
+  console.log(nameProduct);
 
   const [toggle, setToogle] = useState('')
   const [reName, setReName] = useState('')
@@ -22,7 +24,7 @@ function ModalConfirmDelete({ name, clickDeleteProduct }) {
     <Box>
       <ButtonBase 
         onClick={handleToggle}
-        disabled={name.length === 0}
+        disabled={nameProduct.length === 0}
         variant="contained"
         sx={{
           display: 'flex',
@@ -31,7 +33,7 @@ function ModalConfirmDelete({ name, clickDeleteProduct }) {
           borderRadius: '20px',
           width: '110px',
           border: 'solid 4px white',
-          backgroundColor: name.length < 5 ? 'gray': '#1976d2',
+          backgroundColor: nameProduct.length < 5 ? 'gray': '#1976d2',
           marginBottom: '3vh',
           padding: '1vh',
         }}
@@ -43,7 +45,7 @@ function ModalConfirmDelete({ name, clickDeleteProduct }) {
               fontSize: '2vh',
             }}
           >
-            Deletar
+            { nameButton }
           </Typography>
       </ButtonBase>
       <Modal
@@ -71,7 +73,7 @@ function ModalConfirmDelete({ name, clickDeleteProduct }) {
             <h2 id="child-modal-title" style={{ color: 'white' }}>Revisão</h2>
             <p id="child-modal-description" style={{ color: 'white' }}>
               {`Confirme o nome do Item do menu `}
-              {<span style={{ fontWeight:'bold' }}>{`"${name}"`}</span>}
+              {<span style={{ fontWeight:'bold' }}>{`"${nameProduct}"`}</span>}
             </p>
           <Box
             sx={{
@@ -89,7 +91,7 @@ function ModalConfirmDelete({ name, clickDeleteProduct }) {
                 borderBottom:'solid 3px white',
                 marginBottom: '3vh',
               }}
-              placeholder={name}
+              placeholder={nameProduct}
               onChange={(e) => setReName(e.target.value)}
             />
             <Box
@@ -122,9 +124,9 @@ function ModalConfirmDelete({ name, clickDeleteProduct }) {
                 </Typography>
               </ButtonBase>
               <ButtonBase 
-                onClick={() => { clickDeleteProduct(), setToogle(false) }} 
+                onClick={() => { handleClick(), setToogle(false) }} 
                 variant="contained"
-                disabled={reName !== name}
+                disabled={reName !== nameProduct}
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
@@ -133,7 +135,7 @@ function ModalConfirmDelete({ name, clickDeleteProduct }) {
                   width: '100px',
                   marginLeft: '1vw',
                   border: 'solid 4px white',
-                  backgroundColor: reName === name? '#1976d2': 'gray',
+                  backgroundColor: reName === nameProduct? '#1976d2': 'gray',
                   padding: '1vh',
                 }}
               >
@@ -155,4 +157,4 @@ function ModalConfirmDelete({ name, clickDeleteProduct }) {
   )
 }
 
-export default ModalConfirmDelete;
+export default ModalConfirmAction;

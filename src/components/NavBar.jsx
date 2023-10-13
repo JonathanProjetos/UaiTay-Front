@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ButtonBase from '@mui/material/ButtonBase';
 
-function Logout() {
+function NavBar() {
   const router = useRouter();
 
   return (
@@ -54,4 +54,4 @@ function Logout() {
   )
 }
 
-export default Logout
+export default NavBar
