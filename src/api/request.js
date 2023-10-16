@@ -2,8 +2,7 @@ import axios from "axios";
 
 const api = axios.create({
   withCredentials: true,
-  baseURL:`https://calculadora-uaitay-production.up.railway.app`,
-  // baseURL:`http://localhost:3001/`,
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
 export const requestLogin = async (email, password) => {
@@ -57,6 +56,15 @@ export const updateProduct = async (product) => {
   try {
     const { data } = await api.patch(`update-product`, product);
       return data;
+  } catch (err) {
+    return err;
+  }
+}
+
+export const createOrder = async (order) => {
+  try {
+    const { data } = await api.post('create-order', order);
+    return data;
   } catch (err) {
     return err;
   }
