@@ -8,7 +8,9 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import CheckBox from "@mui/material/Checkbox";
 import FormatControlLabel from "@mui/material/FormControlLabel";
-import CreateOrder from "./CreateOrder";
+import { createOrder } from './../api/request'
+import { currentDate, currentHours } from './CurrenteDateAndHours'
+import { toast } from 'react-toastify'
 
 
 function Calculate({ data }) {
@@ -32,23 +34,33 @@ function Calculate({ data }) {
     setList([newList])
   }
 
-  const createOrder = () => {
-    const currentDay = new Date();
-    const day = String(currentDay.getDate()).padStart(2, '0');
-    const month = String(currentDay.getMonth() + 1).padStart(2, '0');
-    const year = currentDay.getFullYear();
-    
-    const formatedDay = `${day}-${month}-${year}`;
-    const currentHours = currentDay.toLocaleTimeString('pt-BR');
-
+  const clickCreateOrder = async () => {
     const data = {
-      product: list,
+      order: list,
       total: sum,
-      date: formatedDay,
-      hour: currentHours,
+      date: currentDate(),
+      hours: currentHours(),
     }
 
     console.log(data);
+
+    const result = await createOrder(data)
+
+    console.log(result);
+
+    if (result._id) {
+      toast.success('Pedido gerado com sucesso', {
+          position: 'bottom-center',
+          autoClose: 4000,
+      })
+      // router.push('/orders')
+    } else {
+      toast.error(`${result.response.status} | ${result.response.data.error}`, {
+        position: 'bottom-center',
+        autoClose: 4000,
+      })
+    }
+
   }
 
   useEffect(() => {
@@ -177,7 +189,7 @@ function Calculate({ data }) {
           }
         </Typography>
         <ButtonBase
-          onClick={() => createOrder()}
+          onClick={() => clickCreateOrder()}
         >
           <Typography
             sx={{
