@@ -23,8 +23,6 @@ function Header() {
         autoClose: 4000,
       })
       router.push('/settings')
-      // setInterval(() => {
-      // }, 4000);
 
     } else {
       toast.error('Login ou senha incorretos', {
@@ -43,8 +41,6 @@ function Header() {
         width: '63vw',
         backgroundColor: '#1976d2',
         color: 'white',
-        borderTopRightRadius: '20px',
-        borderBottomRightRadius: '20px',
         paddingBottom: '10px',
       }}
     >

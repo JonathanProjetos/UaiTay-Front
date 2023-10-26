@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import Calculate from './Calculate'
+import Checkout from './Checkout'
 
 function ListProducts({products}) {
   const [list, setList] = useState([]);
@@ -61,7 +61,7 @@ function ListProducts({products}) {
           ))
         }
       </Box>
-      <Calculate data={list} />
+      <Checkout data={list} />
     </Box>
   )
 }
