@@ -70,4 +70,13 @@ export const createOrder = async (order) => {
   }
 }
 
+export const requestOrders = async () => {
+  try {
+    const { data } =  await api.get('orders');
+    return data;
+  } catch (err) {
+    return  err;
+  }
+}
+
 export default api;
