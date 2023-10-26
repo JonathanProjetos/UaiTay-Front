@@ -8,12 +8,12 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import CheckBox from "@mui/material/Checkbox";
 import FormatControlLabel from "@mui/material/FormControlLabel";
-import { createOrder } from './../api/request'
+import { createOrder } from '../api/request'
 import { currentDate, currentHours } from './CurrenteDateAndHours'
 import { toast } from 'react-toastify'
 
 
-function Calculate({ data }) {
+function Checkout({ data }) {
 
   const router = useRouter()
 
@@ -42,25 +42,29 @@ function Calculate({ data }) {
       hours: currentHours(),
     }
 
-    console.log(data);
-
-    const result = await createOrder(data)
-
-    console.log(result);
-
-    if (result._id) {
-      toast.success('Pedido gerado com sucesso', {
-          position: 'bottom-center',
-          autoClose: 4000,
-      })
-      // router.push('/orders')
-    } else {
-      toast.error(`${result.response.status} | ${result.response.data.error}`, {
+    if(list.length === 0) {
+      toast.error('Não é possível gerar um pedido sem produtos', {
         position: 'bottom-center',
         autoClose: 4000,
       })
-    }
+    } else {
+      const result = await createOrder(data)
 
+      if (result._id) {
+        toast.success('Pedido gerado com sucesso', {
+            position: 'bottom-center',
+            autoClose: 4000,
+        })
+
+        router.push('/orders')
+        
+      } else {
+        toast.error(`${result.response.status} | ${result.response.data.error}`, {
+          position: 'bottom-center',
+          autoClose: 4000,
+        })
+      }
+    }
   }
 
   useEffect(() => {
@@ -211,4 +215,4 @@ function Calculate({ data }) {
 }
 
 
-export default Calculate
+export default Checkout
