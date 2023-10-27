@@ -30,7 +30,12 @@ function CardOrder({ data, index }) {
             {`Total: R$: ${total.toFixed(2).split('.').join(',')}`}
           </Typography>
         </CardContent>
-        <CardActions>
+        <CardActions
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
           <Button size="small">Detalhes</Button>
           <ButtonPrintOrder orderData={data} />
         </CardActions>
