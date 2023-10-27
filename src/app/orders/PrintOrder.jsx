@@ -6,7 +6,7 @@ function PrintOrder({ orderData }) {
   const handlePrint = () => {
     const printWindow = window.open('', '', 'width=400'); 
     printWindow.document.open();
-    printWindow.document.write('<html><head><title>Conteúdo para Impressão</title></head><body style="margin: 0; font-size: 20px; font-family: Arial, sans-serif;">');
+    printWindow.document.write('<html><head><title>Conteúdo para Impressão</title></head><body style="margin: 0; font-size: 15px; font-family: Arial, sans-serif;">');
     printWindow.document.write('<div>-------- UaiTay Comida Chinesa --------</div><br>');
     printWindow.document.write(`<div>---------------------------------------</div>`);
     printWindow.document.write(`<div>CNPJ: 40.429.040/0001-78</div><br>`);
