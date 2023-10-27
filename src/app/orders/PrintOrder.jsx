@@ -1,5 +1,6 @@
 import React from 'react'
-import Button from '@mui/material/Button';
+import ButtonBase from '@mui/material/ButtonBase';
+import PrintIcon from '@mui/icons-material/Print';
 
 function PrintOrder({ orderData }) {
   const { date,hours,order, total } = orderData
@@ -33,12 +34,22 @@ function PrintOrder({ orderData }) {
 
   return (
     <div>
-      <Button 
+      <ButtonBase 
         size="small"
+        sx={{
+          backgroundColor: '#1976d2',
+          color: '#fff',
+          fontWeight: 'bold',
+          padding: '10px',
+          borderRadius: '5px',
+          '&:hover': {
+            backgroundColor: '#115293',
+          },
+        }}
         onClick={() => handlePrint()}
       >
-        Imprimir
-      </Button>
+        <PrintIcon />
+      </ButtonBase>
     </div>
   ) 
 }
