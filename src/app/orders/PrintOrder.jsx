@@ -20,7 +20,7 @@ function PrintOrder({ orderData }) {
     printWindow.document.write(`<div>---------------------------------------</div><br>`);
     printWindow.document.write(`<div>--------Descrição do pedido---------</div><br>`);
     order && order.map((data) => (
-      printWindow.document.write(`<div>1X - ${data.name} - R$:${data.price.toFixed(2).split('.').join(',')}</div><br>`)
+      printWindow.document.write(`<div>1X - ${data.name} </div><br><div>Valor: R$:${data.price.toFixed(2).split('.').join(',')}</div><br>`)
     ))
     printWindow.document.write(`<div>---------------------------------------</div><br>`);
     printWindow.document.write(`<div>Total: R$:${total.toFixed(2).split('.').join(',')}</div><br>`);
