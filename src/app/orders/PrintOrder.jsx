@@ -4,9 +4,9 @@ import Button from '@mui/material/Button';
 function PrintOrder({ orderData }) {
   const { date,hours,order, total } = orderData
   const handlePrint = () => {
-    const printWindow = window.open('', '', 'width=400,height=600'); 
+    const printWindow = window.open('', '', 'width=400'); 
     printWindow.document.open();
-    printWindow.document.write('<html><head><title>Conteúdo para Impressão</title></head><body>');
+    printWindow.document.write('<html><head><title>Conteúdo para Impressão</title></head><body style="margin: 0;">')
     printWindow.document.write('<div>-------- UaiTay Comida Chinesa --------</div><br>');
     printWindow.document.write(`<div>---------------------------------------</div>`);
     printWindow.document.write(`<div>CNPJ: 40.429.040/0001-78</div><br>`);
