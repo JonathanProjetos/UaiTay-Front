@@ -4,8 +4,8 @@ import { toast } from 'react-toastify'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Input from '@mui/material/Input'
-import { deleteProduct } from '../api/request'
-import ModalConfirmAction from '../util/ModalConfirmAction'
+import { deleteProduct } from '../../api/request'
+import ModalConfirmAction from '../../util/ModalConfirmAction'
 
 
 function DeleteProduct() {

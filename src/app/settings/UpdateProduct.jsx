@@ -1,12 +1,12 @@
 "use client"
 import React, { useState } from 'react'
-import { updateProduct } from '../api/request'
+import { updateProduct } from '../../api/request'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Input from '@mui/material/Input'
 import ButtonBase from '@mui/material/ButtonBase'
 import { toast } from 'react-toastify'
-import ModalConfirmAction from '../util/ModalConfirmAction'
+import ModalConfirmAction from '../../util/ModalConfirmAction'
 
 function UpdateProduct() {
   const [nameProduct, setName] = useState('')

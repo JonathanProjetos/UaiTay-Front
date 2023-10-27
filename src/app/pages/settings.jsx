@@ -1,10 +1,10 @@
 "use client"
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/navigation';
-import NewProduct from '../../components/NewProduct'
-import DeleteProduct from '@/components/DeleteProduct';
-import UpdateProduct from '@/components/UpdateProduct';
-import NavBar from '../../components/NavBar';
+import NewProduct from '../settings/NewProduct'
+import DeleteProduct from '../settings/DeleteProduct';
+import UpdateProduct from '../settings/UpdateProduct';
+import NavBar from '../settings/NavBar';
 import Box from '@mui/material/Box'
 import { verifyToken } from '../../api/request'
 import { toast } from 'react-toastify'

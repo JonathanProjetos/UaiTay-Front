@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-import { createProduct } from '../api/request'
+import { createProduct } from '../../api/request'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Input from '@mui/material/Input'
