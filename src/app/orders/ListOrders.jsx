@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import ButtonBase from '@mui/material/ButtonBase'
 import { requestOrders } from '../../api/request'
 import CardOrder from './CardOrder'
 
@@ -51,7 +50,6 @@ function ListOrders() {
             justifyContent: 'space-around',
             flexWrap: 'wrap',
             alignItems: 'center',
-            border: '1px solid black',
             width: '90vw',
           }}
         >
