@@ -18,8 +18,7 @@ function ListProducts({products}) {
       <Box
         sx={{
         display: 'flex',
-        justifyContent: 'center',
-        marginBottom: '20vh',
+        justifyContent: 'flex-start',
         marginRight: '30vw',
         flexWrap: 'wrap',
         '& > :not(style)': {
