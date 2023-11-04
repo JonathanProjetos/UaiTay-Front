@@ -17,8 +17,6 @@ function Checkout() {
 
   const { listProducts, setOrder, setTotal } = useContext(context)
 
-  console.log(listProducts);
-
   const router = useRouter()
 
   const [sum, setSum] = useState(0);
@@ -45,13 +43,13 @@ function Checkout() {
         autoClose: 4000,
       })
     } else {
-      toast.success('Pedido gerado com sucesso, você será direcionado para dados adicionais do cliente.', {
+      toast.success('Pedido gerado com sucesso. Adicione agora os dados do cliente.', {
         position: 'bottom-center',
         autoClose: 4000,
       })
       setOrder(list)
       setTotal(sum)
-      router.push('/customer')
+      router.push('/delivery')
     }
   }
 
