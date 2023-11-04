@@ -1,13 +1,13 @@
 import React from 'react'
-import Box from '@mui/material/Box'
-import ListOrders from '@/components/ListOrders'
+import OrderDetail from '../order/OrderDatail'
 
 function Order() {
+
   return (
-    <Box>
-      <ListOrders/>
-    </Box>
+    <div>
+      <OrderDetail />
+    </div>
   )
 }
 
-export default Order
+export default Order;
