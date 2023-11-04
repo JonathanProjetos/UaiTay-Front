@@ -79,4 +79,28 @@ export const requestOrders = async () => {
   }
 }
 
+export const requestOrder = async (id) => {
+  try {
+    const { data } = await api.get(`order/${id}`);
+    return data;
+  } catch (err) {
+    return err;
+  }
+}
+
+export const getAddressForCep = async (cep) => {
+  try {
+    if(Number(cep.length) <= 8) {
+      const { data } = await api.get(`https://viacep.com.br/ws/${cep}/json/`);
+      console.log(data);
+      return data;
+    } else {
+      return 'CEP inválido';
+    }
+  } catch (err) {
+    return err;
+  }
+
+}
+
 export default api;
