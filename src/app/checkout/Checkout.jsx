@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+"use client"
+import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from 'next/navigation';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -8,12 +9,13 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import CheckBox from "@mui/material/Checkbox";
 import FormatControlLabel from "@mui/material/FormControlLabel";
-import { createOrder } from '../api/request'
-import { currentDate, currentHours } from './CurrenteDateAndHours'
 import { toast } from 'react-toastify'
+import context from "../../context/Context";
 
 
-function Checkout({ data }) {
+function Checkout() {
+
+  const { listProducts, setOrder, setTotal } = useContext(context)
 
   const router = useRouter()
 
@@ -34,43 +36,27 @@ function Checkout({ data }) {
     setList([newList])
   }
 
-  const clickCreateOrder = async () => {
-    const data = {
-      order: list,
-      total: sum,
-      date: currentDate(),
-      hours: currentHours(),
-    }
-
+  const redirectAdditionalCustomerData = () => {
     if(list.length === 0) {
-      toast.error('Não é possível gerar um pedido sem produtos', {
+      toast.error('Não é possível gerar um pedido sem produtos.', {
         position: 'bottom-center',
         autoClose: 4000,
       })
     } else {
-      const result = await createOrder(data)
-
-      if (result._id) {
-        toast.success('Pedido gerado com sucesso', {
-            position: 'bottom-center',
-            autoClose: 4000,
-        })
-
-        router.push('/orders')
-        
-      } else {
-        toast.error(`${result.response.status} | ${result.response.data.error}`, {
-          position: 'bottom-center',
-          autoClose: 4000,
-        })
-      }
+      toast.success('Pedido gerado com sucesso. Adicione agora os dados do cliente.', {
+        position: 'bottom-center',
+        autoClose: 4000,
+      })
+      setOrder(list)
+      setTotal(sum)
+      router.push('/delivery')
     }
   }
 
   useEffect(() => {
-    setList(data)
-    sumProducts(data)
-  },[data, list])
+    setList(listProducts)
+    sumProducts(listProducts)
+  },[listProducts, list])
 
   return (
     <Box
@@ -161,7 +147,7 @@ function Checkout({ data }) {
           width: '25vw',
           marginLeft: '15px',
         }}
-          onClick={() => deleteLastEnteredData(data)}
+          onClick={() => deleteLastEnteredData(listProducts)}
         >
         APAGAR
         </ButtonBase>
@@ -193,7 +179,7 @@ function Checkout({ data }) {
           }
         </Typography>
         <ButtonBase
-          onClick={() => clickCreateOrder()}
+          onClick={() => redirectAdditionalCustomerData()}
         >
           <Typography
             sx={{

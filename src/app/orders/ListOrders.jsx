@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import ButtonBase from '@mui/material/ButtonBase'
 import { requestOrders } from '../../api/request'
 import CardOrder from './CardOrder'
 
@@ -45,32 +44,51 @@ function ListOrders() {
           alignItems: 'center',
         }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-around',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            border: '1px solid black',
-            width: '90vw',
-          }}
-        >
-          {
-            data && data.map((item, index) => (
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  padding: '10px',
-                }} 
-                  key={index}
-              >
-                <CardOrder data={item} index={index} />
-              </Box>
-            ))
-          }
-        </Box>
+      {
+        data && data.length > 0? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-around',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              width: '90vw',
+            }}
+          >
+            {
+              data && data.map((item, index) => (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    padding: '10px',
+                  }} 
+                    key={index}
+                >
+                  <CardOrder data={item} index={index} />
+                </Box>
+              ))
+            }
+          </Box>
+        ) : (
+          <Typography
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontSize: '4vh',
+              color:'black',
+              fontWeight: 'bold',
+              height: '80vh',
+              // marginBottom: '2vh',
+            }}
+          >
+            Nenhum pedido encontrado ...
+          </Typography>
+        )
+      }
+       
       </Box>
     </Box>
   )

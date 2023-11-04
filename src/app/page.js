@@ -4,6 +4,7 @@ import { requestMenuProducts } from '../api/request';
 import ListProducts from '../components/ListProducts';
 import Box from '@mui/material/Box';
 import Header from '../components/Header';
+import Checkout from './checkout/Checkout';
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -19,8 +20,9 @@ export default function Home() {
 
   return (
     <Box>
-      <Header/>
-      <ListProducts products={products} /> 
+        <Header/>
+        <ListProducts products={products} />
+        <Checkout />
     </Box>
   )
 }

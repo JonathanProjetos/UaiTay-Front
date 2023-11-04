@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import Checkout from './Checkout'
+import context from '@/context/Context'
 
 function ListProducts({products}) {
-  const [list, setList] = useState([]);
+  const { listProducts, setListProducts } = useContext(context);
+
   return (
     <Box
       sx={{
@@ -17,8 +18,7 @@ function ListProducts({products}) {
       <Box
         sx={{
         display: 'flex',
-        justifyContent: 'center',
-        marginBottom: '20vh',
+        justifyContent: 'flex-start',
         marginRight: '30vw',
         flexWrap: 'wrap',
         '& > :not(style)': {
@@ -45,7 +45,7 @@ function ListProducts({products}) {
                 width: '100%',
                 height: '100%',
               }}
-              onClick={() => setList([...list, data]) }
+              onClick={() => setListProducts([...listProducts, data]) }
             >
               <Typography 
                 variant="h7" 
@@ -61,7 +61,6 @@ function ListProducts({products}) {
           ))
         }
       </Box>
-      <Checkout data={list} />
     </Box>
   )
 }
