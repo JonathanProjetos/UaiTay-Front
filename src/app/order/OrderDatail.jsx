@@ -118,8 +118,8 @@ function OrderDetail() {
       >
       <ButtonBase
         sx={{
-          width: '100px',
-          height: '50px',
+          width: '110px',
+          height: '60px',
           borderRadius: '5px',
           marginRight: '10vh',
           backgroundColor: '#1976d2',
@@ -128,7 +128,7 @@ function OrderDetail() {
       >
         <Typography
           sx={{
-            fontSize: '2vh',
+            fontSize: '15px',
             fontWeight: 'bold',
             color: 'white',
           }}
@@ -138,15 +138,16 @@ function OrderDetail() {
       </ButtonBase>
       <ButtonBase
         sx={{
-          width: '100px',
-          height: '50px',
+          width: '110px',
+          height: '60px',
           borderRadius: '5px',
+          padding: '10px',
           backgroundColor: '#1976d2',
         }}
       >
         <Typography
           sx={{
-            fontSize: '2vh',
+            fontSize: '15px',
             fontWeight: 'bold',
             color: 'white',
           }}
