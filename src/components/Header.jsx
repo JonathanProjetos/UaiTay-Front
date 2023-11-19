@@ -88,7 +88,7 @@ function Header() {
                     fontSize: '3vh',
                   }}
                 >
-                  UayTay
+                  UaiTay
                 </Typography>
           </ButtonBase>
           <ButtonBase
