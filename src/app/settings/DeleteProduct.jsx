@@ -90,7 +90,7 @@ function DeleteProduct() {
             fontSize: '3vh',
           }}
         />
-        <ModalConfirmAction nameButton="Deletar" nameProduct={nameProduct} clickDeleteProduct={clickDeleteProduct}/>
+        <ModalConfirmAction nameButton="Deletar" nameProduct={nameProduct} handleClick={clickDeleteProduct}/>
       </Box>
     </Box>
   )

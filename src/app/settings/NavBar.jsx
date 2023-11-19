@@ -45,8 +45,10 @@ function NavBar() {
         >
           <ExitToAppIcon
             sx={{
-            fontSize: '4vh',
-            }} 
+              fontSize: '4vh',
+              color: 'white',
+              backgroundColor: 'white'
+            }}
           />
         </ButtonBase>
       </Box>
