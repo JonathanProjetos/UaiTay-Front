@@ -1,2 +1,2 @@
-# UaiTay Front.
+# UaiTay Front
 ## Projeto em desenvolvimento.
