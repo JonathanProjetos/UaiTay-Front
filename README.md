@@ -38,6 +38,22 @@ Este projeto utiliza as seguintes tecnologias e ferramentas:
 - [Next.js](https://nextjs.org/docs) | Framework para React. 
 - [MaterialUi](https://mui.com/material-ui/) | Biblioteca de componentes de estilo para React.
 - [Axios](https://axios-http.com/ptbr/docs/api_intro) | Biblioteca em JavaScript que lida com requisições HTTP.
-- [Express](https://expressjs.com/pt-br/) | Framework para nodejs
+- [React-toastify](https://fkhadra.github.io/react-toastify/introduction) | Biblioteca React que lida com notificações.
 
-O Next.js é um framework de desenvolvimento web para React.js que simplifica e acelera a criação de aplicativos web modernos. Ele oferece recursos poderosos, como roteamento automático, pré-renderização, carregamento otimizado de páginas, suporte a CSS modular, entre outros.O Material-UI fornece uma variedade de componentes reutilizáveis, como botões, barras de navegação, caixas de diálogo, entre outros, que seguem as diretrizes visuais e de interação do Material Design. O Axios é uma biblioteca popular em JavaScript, geralmente utilizada em ambientes de navegador ou em Node.js, para fazer requisições HTTP. Ele fornece uma interface fácil de usar para realizar solicitações tanto para servidores HTTP como para APIs. 
+O Next.js é um framework de desenvolvimento web para React.js que simplifica e acelera a criação de aplicativos web modernos. Ele oferece recursos poderosos, como roteamento automático, pré-renderização, carregamento otimizado de páginas, suporte a CSS modular, entre outros.O Material-UI fornece uma variedade de componentes reutilizáveis, como botões, barras de navegação, caixas de diálogo, entre outros, que seguem as diretrizes visuais e de interação do Material Design. O Axios é uma biblioteca popular em JavaScript, geralmente utilizada em ambientes de navegador ou em Node.js, para fazer requisições HTTP. Ele fornece uma interface fácil de usar para realizar solicitações tanto para servidores HTTP como para APIs. O React-toastify é uma biblioteca para React que facilita a criação e exibição de notificações (toasts) de forma simples e personalizável em aplicações web. Essas notificações são frequentemente utilizadas para informar o usuário sobre eventos, mensagens de sucesso, erro ou qualquer outra informação relevante durante a interação com a aplicação. 
+
+## Instalação e Execução
+### Download do projeto
+```
+git clone git@github.com:JonathanProjetos/Uaitay-Back.git
+```
+
+### Instalar dependências
+```
+cd Uaitay-Front
+npm install
+npm run dev
+```
+
+### Git, GitHub e Histórico de Commits
+Este projeto utilizou a [Especificação de Commits Convencionais](https://www.conventionalcommits.org/en/v1.0.0/), com alguns tipos da [convenção Angular](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines). Além disso, foi utilizado o pacote [conventional-commit-cli](https://www.npmjs.com/package/conventional-commit-cli) para ajudar a seguir a convenção de commits. É importante utilizar a convenção de commits em projetos para manter o histórico de commits organizado e facilitar a leitura e o entendimento do que foi desenvolvido.
