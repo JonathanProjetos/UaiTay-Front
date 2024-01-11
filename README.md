@@ -1,5 +1,5 @@
 # Uaitay-Comida Chinesa (Front)
-O Uaitay-Front é um aplicativo dinâmico desenvolvido com Next.js, dedicado a atender às necessidades de pedidos originados fora do catálogo convencional do iFood. Com a capacidade de gerar o catálogo completo de produtos da loja, criar ordens de serviço e coletar informações essenciais do cliente para a entrega, o Uaitay-Front oferece uma solução eficiente e integrada. No final do processo, você terá a facilidade de imprimir um demonstrativo detalhado. 
+O Uaitay-Front é um aplicativo dinâmico desenvolvido com Next.js, dedicado a atender às necessidades de pedidos originados fora do catálogo convencional de fornecedores de produtos por delivery. Com a capacidade de gerar o catálogo completo de produtos da loja, criar ordens de serviço e coletar informações essenciais do cliente para a entrega, o Uaitay-Front oferece uma solução eficiente e integrada. No final do processo, você terá a facilidade de imprimir um demonstrativo detalhado. 
 
 </details>
 
