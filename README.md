@@ -45,8 +45,10 @@ O Next.js é um framework de desenvolvimento web para React.js que simplifica e 
 ## Instalação e Execução
 ### Download do projeto
 ```
-git clone git@github.com:JonathanProjetos/Uaitay-Back.git
+git@github.com:JonathanProjetos/UaiTay-Front.git
 ```
+### Arquivo env
+- Dentro da pasta Uaitay-Front, existe o arquivo .env.example. Nele, será necessário remover o .example caso queira executar na máquina local. O arquivo .env precisa receber a URL da API Uaitay-Back.
 
 ### Instalar dependências
 ```
