@@ -24,7 +24,7 @@ function ListProducts({ products }) {
         </Typography>
       ) : (
         <Typography variant="h7" sx={{ marginLeft: '20px' }}>
-          Última atualização 11/03/2025.
+          Última atualização 11/03/2025...
         </Typography>
       )}
 
