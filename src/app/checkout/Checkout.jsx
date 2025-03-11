@@ -91,7 +91,7 @@ function Checkout() {
           list && list.map((i) => (
             <ListItem>
               <ListItemText>
-                {i? i.name : null}
+                {`${i? i.name : null}  -  R$: ${i? i.price.toFixed(2).replace('.',',') : null}`}
               </ListItemText>
             </ListItem>
           ))

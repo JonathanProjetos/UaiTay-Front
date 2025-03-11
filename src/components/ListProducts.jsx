@@ -3,10 +3,16 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import context from '@/context/Context'
+import defaultList from '@/util/defaultList'
 
 function ListProducts({products}) {
   const { listProducts, setListProducts } = useContext(context);
 
+  if (!products.length) {
+    alert('Não foi possivel carregar os produtos do back-end');
+  }
+
+  const listOfproducts = products.length ? products : defaultList;
   return (
     <Box
       sx={{
@@ -29,7 +35,7 @@ function ListProducts({products}) {
         }}
       >
         {
-          products && products.map((data) => (
+          listOfproducts.map((data) => (
           <Box key={data._id} sx={{
             display: 'flex',
             justifyContent: 'center',
@@ -44,6 +50,7 @@ function ListProducts({products}) {
               sx={{
                 width: '100%',
                 height: '100%',
+                backgroundColor: products.length > 0 ? '#1976d2' : '#a83535',
               }}
               onClick={() => setListProducts([...listProducts, data]) }
             >
