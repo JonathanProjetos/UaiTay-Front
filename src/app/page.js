@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <Box>
         <Header/>
-        <ListProducts products={products} />
+        <ListProducts products={products || []} />
         <Checkout />
     </Box>
   )
