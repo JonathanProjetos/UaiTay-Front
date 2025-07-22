@@ -98,7 +98,6 @@ function ListOrders() {
               color:'black',
               fontWeight: 'bold',
               height: '80vh',
-              // marginBottom: '2vh',
             }}
           >
             Nenhum pedido encontrado ...

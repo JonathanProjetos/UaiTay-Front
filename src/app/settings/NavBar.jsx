@@ -36,7 +36,6 @@ function NavBar() {
         sx={{
           color: 'white',
           fontWeight: 'bold',
-          // fontSize: '4vh',
           marginRight: '3vw',
         }}
       >
@@ -47,7 +46,6 @@ function NavBar() {
             sx={{
               fontSize: '4vh',
               color: 'white',
-              backgroundColor: 'white'
             }}
           />
         </ButtonBase>

@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { requestOrder } from '../../api/request'
 import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box'
@@ -11,10 +11,11 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import ButtonPrintOrder from './../orders/PrintOrder';
+import Context from '../../context/Context';
 
 function OrderDetail() {
-
-  const router = useRouter()
+  const router = useRouter();
+  const { setCheckedDiscount, setDiscountPercent } = useContext(Context);
 
   const [order, setOrder] = useState({})
 
@@ -124,7 +125,11 @@ function OrderDetail() {
           marginRight: '10vh',
           backgroundColor: '#1976d2',
         }}
-        onClick={() => router.push('/')}
+        onClick={() => {
+          setCheckedDiscount(false);
+          setDiscountPercent('0');
+          router.push('/');
+        }}
       >
         <Typography
           sx={{

@@ -7,6 +7,7 @@ import ButtonBase from "@mui/material/ButtonBase";
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import Input from "@mui/material/Input";
 import CheckBox from "@mui/material/Checkbox";
 import FormatControlLabel from "@mui/material/FormControlLabel";
 import { toast } from 'react-toastify'
@@ -15,13 +16,23 @@ import context from "../../context/Context";
 
 function Checkout() {
 
-  const { listProducts, setOrder, setTotal } = useContext(context)
+  const { 
+    listProducts, 
+    setOrder, 
+    setTotal,
+    setPriceWithDiscount,
+    setTotalDiscounts,
+    setCheckedDiscount,
+    discountPercent,
+    setDiscountPercent
+  } = useContext(context)
 
   const router = useRouter()
 
   const [sum, setSum] = useState(0);
   const [list, setList] = useState([]);
   const [checked, setChecked] = useState(false);
+  // const [discountPercent, setDiscountPercent] = useState('');
 
   function sumProducts(list) {
     const sum = list.reduce((total, item) => {
@@ -52,6 +63,42 @@ function Checkout() {
       router.push('/delivery')
     }
   }
+
+  // Corrige o controle do checkbox para usar o valor do evento
+  const checkDiscount = (isChecked) => {
+    setChecked(isChecked);
+    setCheckedDiscount(isChecked);
+
+    console.log(isChecked, "isChecked")
+    if (!isChecked) {
+      setDiscountPercent('');
+      setPriceWithDiscount(sum);
+      setTotalDiscounts(0);
+    } else {
+      // Quando marcado, aguarda o input do usuário
+      if (discountPercent > 0) {
+        const priceWithDiscount = Number(sum - (sum * (discountPercent / 100)));
+        const discountValue = Number((sum - priceWithDiscount).toFixed(2));
+        setPriceWithDiscount(priceWithDiscount);
+        setTotalDiscounts(discountValue);
+      }
+    }
+  };
+
+  const handleDiscountInput = (e) => {
+    const value = e.target.value;
+    setDiscountPercent(value);
+    const percent = Number(value);
+    if (checked && percent > 0) {
+      const priceWithDiscount = Number(sum - (sum * (percent / 100)));
+      const discountValue = Number((sum - priceWithDiscount).toFixed(2));
+      setPriceWithDiscount(priceWithDiscount);
+      setTotalDiscounts(discountValue);
+    } else {
+      setPriceWithDiscount(sum);
+      setTotalDiscounts(0);
+    }
+  };
 
   useEffect(() => {
     setList(listProducts)
@@ -128,10 +175,60 @@ function Checkout() {
                 },
               }}
               checked={checked}
-              onChange={() => setChecked(!checked)}
+              onChange={(e) => checkDiscount(e.target.checked)}
             />
           }
         />
+        {checked && (
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            marginBottom: '20px',
+            backgroundColor: 'red',
+            borderRadius: '15px',
+            padding: '5px',
+            marginRight: '5px',
+            marginLeft: '15px',
+          }}>
+            <Typography
+              sx={{
+                color: 'white',
+                fontWeight: 'bold',
+                fontSize: '15px',
+                marginRight: '10px',
+                marginLeft: '10px',
+              }}
+            >
+              Valor do desconto:
+            </Typography>
+            <Input
+              type="text"
+              value={discountPercent}
+              onChange={handleDiscountInput}
+              placeholder="% desconto"
+              disableUnderline
+              sx={{
+                color: 'white',
+                width: '2vw', // reduzido para aproximar do %
+                fontWeight: 'bold',
+                fontSize: '15px',
+                padding: '5px',
+                textAlign: 'right',
+                marginRight: '2px',
+              }}
+            />
+            <Typography
+              sx={{
+                color: 'white',
+                fontWeight: 'bold',
+                fontSize: '15px',
+                marginLeft: '2px', // aproxima o % do input
+              }}
+            >
+              %.
+            </Typography>
+          </Box>
+        )}
 
         <ButtonBase
           sx={{
@@ -174,8 +271,9 @@ function Checkout() {
           }}
         >
           {
-            checked ? `Total: R$${(sum - (sum * 0.1)).toFixed(2).replace('.',',')}` :
-            `Total: R$${sum.toFixed(2).replace('.',',')}`
+            checked && discountPercent > 0
+              ? `Total: R$${(sum - (sum * (discountPercent / 100))).toFixed(2).replace('.',',')}`
+              : `Total: R$${sum.toFixed(2).replace('.',',')}`
           }
         </Typography>
         <ButtonBase

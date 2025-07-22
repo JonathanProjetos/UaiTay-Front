@@ -51,7 +51,6 @@ function Header() {
         display: 'flex',
         justifyContent: 'flex-start',
         flexWrap: 'wrap',
-        // backgroundColor: '#1976d2',
         color: 'white',
         paddingBottom: '10px',
       }}
@@ -71,9 +70,10 @@ function Header() {
                   border: 'solid 3px white',
                   borderRadius: '100px',
                   marginLeft: '12px',
-                  padding: '10px',
-                  width: '100px',
-                  height: '100px',
+                  // marginTop: '5px',
+                  padding: '20px',
+                  width: '110px',
+                  height: '110px',
                   backgroundColor: '#1976d2',
                   '&:hover': {
                     backgroundColor: '#1e62a5',
@@ -96,8 +96,8 @@ function Header() {
               border: 'solid 3px white',
               borderRadius: '100px',
               marginLeft: '12px',
-              padding: '15px',
-              width: '120px',
+              padding: '20px',
+              width: '130px',
               height: '60px',
               backgroundColor: '#1976d2',
               '&:hover': {
