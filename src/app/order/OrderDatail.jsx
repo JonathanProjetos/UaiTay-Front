@@ -127,7 +127,7 @@ function OrderDetail() {
         }}
         onClick={() => {
           setCheckedDiscount(false);
-          setDiscountPercent('0');
+          setDiscountPercent('');
           router.push('/');
         }}
       >
