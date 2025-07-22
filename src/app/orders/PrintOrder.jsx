@@ -37,6 +37,24 @@ function PrintOrder({ orderData }) {
     return value.toFixed(2).replace('.', ',');
   };
 
+  // Função para agrupar produtos iguais e somar quantidade/valor
+  const groupProducts = (products) => {
+    const grouped = {};
+    products.forEach(item => {
+      if (!grouped[item.name]) {
+        grouped[item.name] = {
+          ...item,
+          count: 1,
+          totalPrice: item.price
+        };
+      } else {
+        grouped[item.name].count += 1;
+        grouped[item.name].totalPrice += item.price;
+      }
+    });
+    return Object.values(grouped);
+  };
+
   // Função para gerar o HTML do recibo
   const generateReceiptHTML = () => {
     return `
@@ -66,9 +84,9 @@ function PrintOrder({ orderData }) {
           <div>Complemento: ${complement || ''}</div><br>
           <div>Forma de pagamento: ${payment || ''}</div><br>
           <div>--------Descrição do pedido---------</div><br>
-          ${order && order.length > 0 ? order.map((data) => `
-            <div>1X - ${data.name || ''} </div><br>
-            <div>Valor: R$: ${formatCurrency(data.price)}</div><br>
+          ${order && order.length > 0 ? groupProducts(order).map((data) => `
+            <div>${data.count}X - ${data.name || ''} </div><br>
+            <div>Valor total: R$: ${formatCurrency(data.totalPrice)}</div><br>
           `).join('') : '<div>Nenhum item no pedido.</div><br>'}
           <div>---------------------------------------</div><br>
           ${checkedDiscount ? `

@@ -24,7 +24,8 @@ function Checkout() {
     setTotalDiscounts,
     setCheckedDiscount,
     discountPercent,
-    setDiscountPercent
+    setDiscountPercent,
+    setListProducts
   } = useContext(context)
 
   const router = useRouter()
@@ -42,9 +43,15 @@ function Checkout() {
     setSum(sum)
   }
 
-  const deleteLastEnteredData = (list)  => {
-    const  newList = list.pop();
-    setList([newList])
+  const deleteLastEnteredData = () => {
+    if (list.length > 0) {
+      // Apaga todos os itens do primeiro agrupado
+      const firstItemName = list[0].name;
+      const newList = list.filter(item => item.name !== firstItemName);
+      setList(newList);
+      setListProducts(newList);
+      sumProducts(newList);
+    }
   }
 
   const redirectAdditionalCustomerData = () => {
@@ -100,10 +107,53 @@ function Checkout() {
     }
   };
 
+  // Função para agrupar itens iguais e somar valores
+  function groupProducts(products) {
+    const grouped = {};
+    products.forEach(item => {
+      if (!grouped[item.name]) {
+        grouped[item.name] = {
+          ...item,
+          count: 1,
+          totalPrice: item.price
+        };
+      } else {
+        grouped[item.name].count += 1;
+        grouped[item.name].totalPrice += item.price;
+      }
+    });
+    return Object.values(grouped);
+  }
+
+  // Função para decrementar quantidade de um item agrupado
+  function handleDecrement(name) {
+    // Remove todos os itens do tipo selecionado, um por vez, até não restar nenhum
+    const newList = [...list];
+    const idx = newList.findIndex(item => item.name === name);
+    if (idx !== -1) {
+      newList.splice(idx, 1); // Remove o item clicado
+      setList(newList);
+      setListProducts(newList);
+      // Atualiza o valor total e o desconto
+      const newSum = newList.reduce((total, item) => total + item.price, 0);
+      setSum(newSum);
+      if (checked && discountPercent > 0) {
+        const priceWithDiscount = Number(newSum - (newSum * (discountPercent / 100)));
+        const discountValue = Number((newSum - priceWithDiscount).toFixed(2));
+        setPriceWithDiscount(priceWithDiscount);
+        setTotalDiscounts(discountValue);
+      } else {
+        setPriceWithDiscount(newSum);
+        setTotalDiscounts(0);
+      }
+    }
+  }
+
+  // Atualiza a lista e o valor total sempre que listProducts mudar (adicionar novo item)
   useEffect(() => {
-    setList(listProducts)
-    sumProducts(listProducts)
-  },[listProducts, list])
+    setList(listProducts);
+    sumProducts(listProducts);
+  }, [listProducts]);
 
   return (
     <Box
@@ -135,11 +185,33 @@ function Checkout() {
         }}
       >
         {
-          list && list.map((i) => (
-            <ListItem>
-              <ListItemText>
-                {`${i? i.name : null}  -  R$: ${i? i.price.toFixed(2).replace('.',',') : null}`}
+          groupProducts(list).map((i) => (
+            <ListItem key={i.name} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <ListItemText
+                sx={{
+                  color: 'white',
+                  fontWeight: 'bold',
+                  fontSize: '15px',
+                }}
+              >
+                {`${i.count}x ${i.name} -  R$: ${i.totalPrice.toFixed(2).replace('.',',')}`}
               </ListItemText>
+              {i.count > 1 && (
+                <ButtonBase
+                  sx={{
+                    backgroundColor: 'white',
+                    color: 'red',
+                    fontWeight: 'bold',
+                    borderRadius: '50%',
+                    width: '30px',
+                    height: '30px',
+                    marginLeft: '10px',
+                  }}
+                  onClick={() => handleDecrement(i.name)}
+                >
+                  -
+                </ButtonBase>
+              )}
             </ListItem>
           ))
         }
@@ -244,7 +316,7 @@ function Checkout() {
           width: '25vw',
           marginLeft: '15px',
         }}
-          onClick={() => deleteLastEnteredData(listProducts)}
+          onClick={deleteLastEnteredData}
         >
         APAGAR
         </ButtonBase>
