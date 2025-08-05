@@ -5,11 +5,10 @@ const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
-export const requestLogin = async (email, password) => {
+export const requestLogin = async (email) => {
   try {
     const { data } = await api.post('login', {
-      email,
-      password
+      email
     })
     
     return data;
