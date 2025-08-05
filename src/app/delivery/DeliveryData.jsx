@@ -19,7 +19,7 @@ function DeliveryData() {
 
   const [customer, setCustomer] = useState("");
   const [address, setAddress] = useState("");
-  const [number, setNumber] = useState(0);
+  const [number, setNumber] = useState("");
   const [district, setDistrict] = useState("");
   const [city, setCity] = useState("");
   const [complement, setComplement] = useState("");
@@ -28,7 +28,7 @@ function DeliveryData() {
   const [discount, setDiscount] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
 
-  const {
+ /* const {
     ready,
     value: addressValue,
     suggestions: { status, data },
@@ -40,6 +40,7 @@ function DeliveryData() {
     },
     debounce: 300,
   });
+  */
 
   useEffect(() => {
     if (order.length === 0) {
@@ -57,7 +58,7 @@ function DeliveryData() {
     }
   }, [order, customer, phone, address, number, district, city, complement, payment, discount]);
 
-  const handleSelect = async (description) => {
+  /*const handleSelect = async (description) => {
     setAddressValue(description, false);
     clearSuggestions();
 
@@ -70,7 +71,7 @@ function DeliveryData() {
     setAddress(description);
     setDistrict(getComponent("sublocality") || getComponent("political"));
     setCity(getComponent("administrative_area_level_2"));
-  };
+  };*/
 
   const generateOrder = async () => {
     const convertNumber = Number(number);
@@ -95,13 +96,6 @@ function DeliveryData() {
       router.push(`/order`);
     }
   };
-
-  console.log("ready:", ready);
-  console.log("status:", status);
-  console.log("address", addressValue);
-  console.log("city", city);
-  console.log("district", district);
-  console.log("data", data);
 
   return (
     <Box
@@ -152,38 +146,9 @@ function DeliveryData() {
               fullWidth
               label="Endereço"
               variant="standard"
-              disabled={!ready}
-              value={addressValue}
-              onChange={(e) => setAddressValue(e.target.value)}
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
             />
-            {status === "OK" && (
-              <Box
-                sx={{
-                  position: "absolute",
-                  zIndex: 10,
-                  background: "white",
-                  width: "100%",
-                  border: "1px solid #ccc",
-                  maxHeight: 200,
-                  overflowY: "auto",
-                }}
-              >
-                {data.map(({ place_id, description }) => (
-                  <Box
-                    key={place_id}
-                    sx={{
-                      padding: "8px",
-                      cursor: "pointer",
-                      borderBottom: "1px solid #eee",
-                      "&:hover": { backgroundColor: "#f0f0f0" },
-                    }}
-                    onClick={() => handleSelect(description)}
-                  >
-                    {description}
-                  </Box>
-                ))}
-              </Box>
-            )}
           </Box>
 
           <TextField
