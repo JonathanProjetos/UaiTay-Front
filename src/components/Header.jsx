@@ -1,24 +1,21 @@
 "use client"
-import React,{ useState, useEffect } from 'react';
+import React,{ useEffect } from 'react';
+import { useSession, signIn} from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
-import Input from '@mui/material/Input';
 import ButtonBase from '@mui/material/ButtonBase';
 import { requestLogin } from '../api/request';
 import { toast } from 'react-toastify';
 import { Typography } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function Header() {
-  const [login, setLogin] = useState('')
-  const [password, setPassword] = useState('')
-  const [toggle, setToggle] = useState(true)
+  const { data: session } = useSession();
 
   const router = useRouter()
 
-  const validateAcess = async () => {
+  const validateAcess = async (email) => {
 
-    const data = await requestLogin(login, password)
+    const data = await requestLogin(email)
 
     if(data.menssage === "Ok") {
       toast.success('Login efetuado com sucesso.', {
@@ -27,7 +24,7 @@ function Header() {
       })
       router.push('/settings')
 
-    } else if (login === '' || password === '') {
+    } else if (email === '') {
       toast.error('Campo de email ou senha não pode ser vazío.', {
         position: 'bottom-center',
         autoClose: 4000,
@@ -40,10 +37,12 @@ function Header() {
       })
     }
   }
-  
+
   useEffect(() => {
-    setToggle(true)
-  },[])
+    if (session) {
+      validateAcess(session.user.email);
+    }
+  }, [session]);
 
   return (
     <Box
@@ -54,10 +53,8 @@ function Header() {
         color: 'white',
         paddingBottom: '10px',
       }}
-      style={{ width: toggle? '20vw' : '63vw' }}
     >
-      {toggle? (
-        <Box
+    <Box
           sx={{
             display: 'flex',
             justifyContent: 'flex-start',
@@ -79,7 +76,7 @@ function Header() {
                     backgroundColor: '#1e62a5',
                   },
                 }}
-                onClick={() => setToggle(false)}
+                onClick={() => signIn('google')}
               >
                 <Typography
                   sx={{
@@ -117,70 +114,6 @@ function Header() {
             </Typography>
           </ButtonBase>
         </Box>
-      ):(
-        <>
-          <Box
-            sx={{
-              backgroundColor: '#1976d2',
-              width:'63vw',
-              marginBottom: '2vh',
-              padding: '10px',  
-            }}
-          >
-            <Input
-              placeholder='email'
-              onChange={(e) => setLogin(e.target.value)}
-              sx={{
-                marginLeft: '20px',
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: '3vh',
-                borderBottom: 'solid 2px white',
-              }}
-            />
-            <Input
-              placeholder='Password'
-              onChange={(e) => setPassword(e.target.value)}
-              type='password'
-              sx={{
-                marginLeft: '30px',
-                marginRight: '20px',
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: '3vh',
-                borderBottom: 'solid 2px white',
-              }}
-            />
-            <ButtonBase
-              sx={{
-                marginLeft: '10px',
-                fontWeight: 'bold',
-                fontSize: '2vh',
-                border: 'solid 3px white',
-                padding: '10px',
-                borderRadius: '20px',
-                marginTop: '1vh',
-              }}
-              onClick={() => validateAcess()}
-            >
-              Login
-            </ButtonBase>
-            <ButtonBase>
-            <ArrowBackIcon
-              sx={{
-                fontSize: '4vh',
-                color: 'white',
-                // backgroundColor: 'white',
-                marginLeft: '20px',
-              }}
-              onClick={() => setToggle(true)}
-            />
-            </ButtonBase>
-          </Box>
-          <Box>
-          </Box>
-        </>
-      )}
     </Box>
   )
 }

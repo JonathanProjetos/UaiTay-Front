@@ -4,9 +4,15 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ButtonBase from '@mui/material/ButtonBase';
+import { signOut } from 'next-auth/react';
 
 function NavBar() {
   const router = useRouter();
+
+  const handleLogout = () => {
+    signOut({ callbackUrl: '/' });
+    router.push('/');
+  }
 
   return (
     <Box
@@ -40,7 +46,7 @@ function NavBar() {
         }}
       >
         <ButtonBase
-          onClick={() => router.push('/')}
+          onClick={() => handleLogout()}
         >
           <ExitToAppIcon
             sx={{

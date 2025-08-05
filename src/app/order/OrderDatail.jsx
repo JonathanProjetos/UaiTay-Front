@@ -10,7 +10,7 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import ButtonPrintOrder from './../orders/PrintOrder';
+import ButtonPrintOrder from '../orders/PrintOrder';
 import Context from '../../context/Context';
 
 function OrderDetail() {
