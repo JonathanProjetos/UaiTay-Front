@@ -1,4 +1,5 @@
 import axios from "axios";
+import { mockarrayorder } from "@/mock/pedido";
 
 const api = axios.create({
   withCredentials: true,
@@ -51,11 +52,14 @@ export const createOrder = async (order) => {
 }
 
 export const requestOrders = async () => {
-  return requestApi(() => api.get('orders'));
+ // return requestApi(() => api.get('orders'));
+ return mockarrayorder;
 }
 
 export const requestOrder = async (id) => {
-  return requestApi(() => api.get(`order/${id}`));
+  // return requestApi(() => api.get(`order/${id}`));
+  console.log(id);
+  return mockarrayorder[id];
 }
 
 export const getAddressForCep = async (cep) => {
