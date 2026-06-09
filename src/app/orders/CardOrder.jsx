@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -6,9 +8,11 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ButtonPrintOrder from './PrintOrder';
+import OrderDetailsModal from './OrderDetailsModal';
 import { formatCurrency, formatOrderDate } from '@/util/orderHelpers';
 
 function CardOrder({ data, index }) {
+  const [isDetailsOpen, setIsDetailsOpen] = React.useState(false);
   const { date, hours, total } = data
   const formattedDate = formatOrderDate(date);
   const formattedTotal = formatCurrency(total);
@@ -21,6 +25,9 @@ function CardOrder({ data, index }) {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
+            {data?.customer || 'Cliente sem nome'}
+          </Typography>
+          <Typography variant="body2" component="text.secondary">
             {`Pedido N° ${index +1}`}
           </Typography>
           <Typography variant="body2" color="text.secondary">
@@ -39,9 +46,14 @@ function CardOrder({ data, index }) {
             justifyContent: 'space-between',
           }}
         >
-          <Button size="small">Detalhes</Button>
+          <Button size="small" onClick={() => setIsDetailsOpen(true)}>Detalhes</Button>
           <ButtonPrintOrder orderData={data} />
         </CardActions>
+        <OrderDetailsModal
+          orderData={data}
+          open={isDetailsOpen}
+          onClose={() => setIsDetailsOpen(false)}
+        />
       </Card>
   )
 }
