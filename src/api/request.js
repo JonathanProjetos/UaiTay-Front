@@ -52,14 +52,11 @@ export const createOrder = async (order) => {
 }
 
 export const requestOrders = async () => {
- // return requestApi(() => api.get('orders'));
- return mockarrayorder;
+  return requestApi(() => api.get('orders'));
 }
 
 export const requestOrder = async (id) => {
-  // return requestApi(() => api.get(`order/${id}`));
-  console.log(id);
-  return mockarrayorder[id];
+  return requestApi(() => api.get(`order/${id}`));
 }
 
 export const getAddressForCep = async (cep) => {
