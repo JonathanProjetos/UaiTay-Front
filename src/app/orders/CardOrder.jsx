@@ -6,9 +6,12 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ButtonPrintOrder from './PrintOrder';
+import { formatCurrency, formatOrderDate } from '@/util/orderHelpers';
 
 function CardOrder({ data, index }) {
-  const { date, hours, order, total } = data
+  const { date, hours, total } = data
+  const formattedDate = formatOrderDate(date);
+  const formattedTotal = formatCurrency(total);
 
   return (
       <Card sx={{ maxWidth: 300 }}>
@@ -21,13 +24,13 @@ function CardOrder({ data, index }) {
             {`Pedido N° ${index +1}`}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {`Data de entrada: ${date.split('-').join('/')}`}
+            {`Data de entrada: ${formattedDate}`}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {`Hora de entrada: ${hours}`}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {`Total: R$: ${total.toFixed(2).split('.').join(',')}`}
+            {`Total: R$: ${formattedTotal}`}
           </Typography>
         </CardContent>
         <CardActions

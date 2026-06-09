@@ -1,20 +1,20 @@
-import {useContext} from 'react'
+import { useContext } from 'react'
 import ButtonBase from '@mui/material/ButtonBase';
 import PrintIcon from '@mui/icons-material/Print';
 import context from '@/context/Context';
+import { escapeHtml, formatCurrency, groupProducts } from '@/util/orderHelpers';
 
 function PrintOrder({ orderData }) {
   const {
-    priceWithDiscount, 
-    totalDiscounts, 
+    priceWithDiscount,
+    totalDiscounts,
     checkedDiscount,
     discountPercent
-
   } = useContext(context)
 
   const {
     customer,
-    phone, 
+    phone,
     address,
     district,
     city,
@@ -23,39 +23,19 @@ function PrintOrder({ orderData }) {
     complement,
     date,
     hours,
-    order, 
+    order,
     total,
+    checkedDiscount: orderCheckedDiscount,
+    discountPercent: orderDiscountPercent,
+    totalDiscounts: orderTotalDiscounts,
+    priceWithDiscount: orderPriceWithDiscount,
   } = orderData
 
-    console.log(priceWithDiscount, "preço com descontos", "PrintOrder");
-    console.log(totalDiscounts, "discontos", "PrintOrder");
-    console.log(checkedDiscount, "checkbox", "PrintOrder");
+  const hasDiscount = checkedDiscount || orderCheckedDiscount;
+  const resolvedDiscountPercent = hasDiscount ? (discountPercent || orderDiscountPercent || 0) : 0;
+  const resolvedDiscounts = hasDiscount ? (totalDiscounts || orderTotalDiscounts || 0) : 0;
+  const resolvedTotal = hasDiscount ? (priceWithDiscount || orderPriceWithDiscount || total) : total;
 
-  // Função utilitária para formatar valores monetários
-  const formatCurrency = (value) => {
-    if (typeof value !== 'number') return '00,00';
-    return value.toFixed(2).replace('.', ',');
-  };
-
-  // Função para agrupar produtos iguais e somar quantidade/valor
-  const groupProducts = (products) => {
-    const grouped = {};
-    products.forEach(item => {
-      if (!grouped[item.name]) {
-        grouped[item.name] = {
-          ...item,
-          count: 1,
-          totalPrice: item.price
-        };
-      } else {
-        grouped[item.name].count += 1;
-        grouped[item.name].totalPrice += item.price;
-      }
-    });
-    return Object.values(grouped);
-  };
-
-  // Função para gerar o HTML do recibo
   const generateReceiptHTML = () => {
     return `
       <html>
@@ -71,32 +51,32 @@ function PrintOrder({ orderData }) {
           <div>Cidade: Contagem</div><br>
           <div>Cep: 32072440</div><br>
           <div>Telefone: (31) 9 9985-6780</div><br>
-          <div>Data: ${date || ''}</div><br>
-          <div>Hora: ${hours || ''}</div>
+          <div>Data: ${escapeHtml(date)}</div><br>
+          <div>Hora: ${escapeHtml(hours)}</div>
           <div>---------------------------------------</div><br>
           <div>--------Dados do Cliente---------</div><br>
-          <div>Nome: ${customer || ''}</div><br>
-          <div>Telefone: ${phone || ''}</div><br>
-          <div>Endereço: ${address || ''}</div><br>
-          <div>Número: ${number || ''}</div><br>
-          <div>Bairro: ${district || ''}</div><br>
-          <div>Cidade: ${city || ''}</div><br>
-          <div>Complemento: ${complement || ''}</div><br>
-          <div>Forma de pagamento: ${payment || ''}</div><br>
+          <div>Nome: ${escapeHtml(customer)}</div><br>
+          <div>Telefone: ${escapeHtml(phone)}</div><br>
+          <div>Endereço: ${escapeHtml(address)}</div><br>
+          <div>Número: ${escapeHtml(number)}</div><br>
+          <div>Bairro: ${escapeHtml(district)}</div><br>
+          <div>Cidade: ${escapeHtml(city)}</div><br>
+          <div>Complemento: ${escapeHtml(complement)}</div><br>
+          <div>Forma de pagamento: ${escapeHtml(payment)}</div><br>
           <div>--------Descrição do pedido---------</div><br>
           ${order && order.length > 0 ? groupProducts(order).map((data) => `
-            <div>${data.count}X - ${data.name || ''} </div><br>
+            <div>${data.count}X - ${escapeHtml(data.name)} </div><br>
             <div>Valor total: R$: ${formatCurrency(data.totalPrice)}</div><br>
           `).join('') : '<div>Nenhum item no pedido.</div><br>'}
           <div>---------------------------------------</div><br>
-          ${checkedDiscount ? `
+          ${hasDiscount ? `
             <div>Soma dos produtos: R$: ${formatCurrency(total)}</div><br>
-            <div>Desconto: ${discountPercent ? discountPercent : '0'}%.</div><br>
-            <div>Valor descontado: R$: ${formatCurrency(totalDiscounts)}</div><br>
-            <div>Total: R$: ${formatCurrency(priceWithDiscount)}</div><br>
+            <div>Desconto: ${escapeHtml(resolvedDiscountPercent)}%.</div><br>
+            <div>Valor descontado: R$: ${formatCurrency(resolvedDiscounts)}</div><br>
+            <div>Total: R$: ${formatCurrency(resolvedTotal)}</div><br>
           ` : `
             <div>Soma dos produtos: R$: ${formatCurrency(total)}</div><br>
-            <div>Desconto: ${discountPercent ? discountPercent : '0'}%.</div><br>
+            <div>Desconto: 0%.</div><br>
             <div>Valor descontado: R$: 00,00</div><br>
             <div>Total: R$: ${formatCurrency(total)}</div><br>
           `}

@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-import { createProduct } from '../../api/request'
+import { createProduct, getApiErrorMessage } from '../../api/request'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Input from '@mui/material/Input'
@@ -30,7 +30,7 @@ function NewProduct() {
       })
 
     } else {
-      toast.error(`${result.response.status} | ${result.response.data.error}`, {
+      toast.error(getApiErrorMessage(result, 'Não foi possível adicionar o produto.'), {
         position: 'bottom-center',
         autoClose: 4000,
       })

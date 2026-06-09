@@ -5,7 +5,7 @@ import Button from '@mui/material/Button'
 import context from '@/context/Context'
 import defaultList from '@/util/defaultList'
 
-function ListProducts({ products }) {
+function ListProducts({ products = [] }) {
   const { listProducts, setListProducts } = useContext(context);
 
   const listOfproducts = products.length ? products : defaultList;

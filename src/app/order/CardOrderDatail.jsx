@@ -6,6 +6,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ButtonPrintOrder from '../orders/PrintOrder';
+import { formatCurrency, formatOrderDate } from '../../util/orderHelpers';
 
 function CardOrderDetail({ data }) {
   
@@ -20,13 +21,13 @@ function CardOrderDetail({ data }) {
             {`Pedido Realizado`}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {`Data de entrada: ${data.date.split('-').join('/')}`}
+            {`Data de entrada: ${formatOrderDate(data.date)}`}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {`Hora de entrada: ${data.hours}`}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {`Total: R$: ${data.total.toFixed(2).split('.').join(',')}`}
+            {`Total: R$: ${formatCurrency(data.total)}`}
           </Typography>
         </CardContent>
         <CardActions

@@ -6,18 +6,18 @@ import Typography from '@mui/material/Typography';
 import Input from '@mui/material/Input';
 
 function ModalConfirmAction({ nameButton, nameProduct, handleClick }) {
-
-  console.log(nameProduct);
-
-  const [toggle, setToogle] = useState('')
+  const [toggle, setToggle] = useState(false)
   const [reName, setReName] = useState('')
 
   const handleToggle = () => {
-    if (toggle === true) {
-      setToogle(false)
-    }else {
-      setToogle(true);
-    }
+    setToggle((current) => !current)
+    setReName('')
+  }
+
+  const handleConfirm = () => {
+    handleClick();
+    setToggle(false);
+    setReName('');
   }
   
   return (
@@ -25,7 +25,6 @@ function ModalConfirmAction({ nameButton, nameProduct, handleClick }) {
       <ButtonBase 
         onClick={handleToggle}
         disabled={nameProduct.length === 0}
-        variant="contained"
         sx={{
           display: 'flex',
           justifyContent: 'center',
@@ -92,6 +91,7 @@ function ModalConfirmAction({ nameButton, nameProduct, handleClick }) {
                 marginBottom: '3vh',
               }}
               placeholder={nameProduct}
+              value={reName}
               onChange={(e) => setReName(e.target.value)}
             />
             <Box
@@ -120,12 +120,11 @@ function ModalConfirmAction({ nameButton, nameProduct, handleClick }) {
                     fontSize: '2vh',
                   }}
                 >
-                  cancelar
+                  Cancelar
                 </Typography>
               </ButtonBase>
               <ButtonBase 
-                onClick={() => { handleClick(), setToogle(false) }} 
-                variant="contained"
+                onClick={handleConfirm} 
                 disabled={reName !== nameProduct}
                 sx={{
                   display: 'flex',
@@ -146,7 +145,7 @@ function ModalConfirmAction({ nameButton, nameProduct, handleClick }) {
                     fontSize: '2vh',
                   }}
                 >
-                  confirmar
+                  Confirmar
                 </Typography>
               </ButtonBase>
             </Box>
