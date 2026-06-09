@@ -43,6 +43,15 @@ Este projeto utiliza as seguintes tecnologias e ferramentas:
 O Next.js é um framework de desenvolvimento web para React.js que simplifica e acelera a criação de aplicativos web modernos. Ele oferece recursos poderosos, como roteamento automático, pré-renderização, carregamento otimizado de páginas, suporte a CSS modular, entre outros.O Material-UI fornece uma variedade de componentes reutilizáveis, como botões, barras de navegação, caixas de diálogo, entre outros, que seguem as diretrizes visuais e de interação do Material Design. O Axios é uma biblioteca popular em JavaScript, geralmente utilizada em ambientes de navegador ou em Node.js, para fazer requisições HTTP. Ele fornece uma interface fácil de usar para realizar solicitações tanto para servidores HTTP como para APIs. O React-toastify é uma biblioteca para React que facilita a criação e exibição de notificações (toasts) de forma simples e personalizável em aplicações web. Essas notificações são frequentemente utilizadas para informar o usuário sobre eventos, mensagens de sucesso, erro ou qualquer outra informação relevante durante a interação com a aplicação. 
 
 ## Instalação e Execução
+### Versão do Node.js
+- Use Node.js 24.16.0 LTS.
+- O projeto também aceita Node.js Current até a linha 26, conforme `package.json`, mas a versão recomendada para estabilidade é a LTS.
+- Se usar nvm:
+```
+nvm install
+nvm use
+```
+
 ### Download do projeto
 ```
 git@github.com:JonathanProjetos/UaiTay-Front.git
