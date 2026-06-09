@@ -1,5 +1,5 @@
 "use client"
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { requestOrder } from '../../api/request'
 import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box'
@@ -12,6 +12,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import ButtonPrintOrder from '../orders/PrintOrder';
 import Context from '../../context/Context';
+import { formatCurrency, formatOrderDate } from '../../util/orderHelpers';
 
 function OrderDetail() {
   const router = useRouter();
@@ -19,26 +20,24 @@ function OrderDetail() {
 
   const [order, setOrder] = useState({})
 
-  const getOrder = async () => {
+  const getOrder = useCallback(async () => {
     const idOrder = JSON.parse(localStorage.getItem('orderId')) || ''
     const data = await requestOrder(idOrder)
     setOrder(data)
 
-    console.log(data);
-
     if(data === null || !data._id) {
       router.push('/')
     }
-  }
+  }, [router])
 
   useEffect(() => {
     getOrder()
-  }, [])
+  }, [getOrder])
 
   return (
     <Box
       sx={{
-        diplay: 'flex',
+        display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         width: '100vw',
@@ -88,13 +87,13 @@ function OrderDetail() {
               {`Nome do cliente: ${order && order.customer}`}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {`Data de entrada: ${order && order.date?.split('-').join('/')}`}
+              {`Data de entrada: ${formatOrderDate(order?.date)}`}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {`Hora de entrada: ${order && order.hours}`}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {`Total: R$: ${order && order.total?.toFixed(2).split('.').join(',')}`}
+              {`Total: R$: ${formatCurrency(order?.total)}`}
             </Typography>
           </CardContent>
           <CardActions

@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-import { updateProduct } from '../../api/request'
+import { updateProduct, getApiErrorMessage } from '../../api/request'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Input from '@mui/material/Input'
@@ -32,7 +32,7 @@ function UpdateProduct() {
       setPrice('')
 
     } else {
-      toast.error(`${result?.response?.status} | ${result?.response?.data?.error}`, {
+      toast.error(getApiErrorMessage(result, 'Não foi possível atualizar o produto.'), {
         position: 'bottom-center',
         autoClose: 4000,
       })

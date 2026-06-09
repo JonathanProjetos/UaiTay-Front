@@ -1,10 +1,10 @@
 "use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Input from '@mui/material/Input'
-import { deleteProduct } from '../../api/request'
+import { deleteProduct, getApiErrorMessage } from '../../api/request'
 import ModalConfirmAction from '../../util/ModalConfirmAction'
 
 
@@ -22,7 +22,7 @@ function DeleteProduct() {
 
       setNameProduct('');
     } else {
-      toast.error(`${resolved?.response?.status} | ${resolved?.response?.data?.error}`, {
+      toast.error(getApiErrorMessage(resolved, 'Não foi possível deletar o produto.'), {
         position: 'bottom-center',
         autoClose: 4000,
       })

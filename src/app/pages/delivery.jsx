@@ -1,10 +1,10 @@
 import React from 'react'
-import Delivery from '../delivery/DeliveryData'
+import DeliveryData from '../delivery/DeliveryData'
 
 function Delivery() {
   return (
     <div>
-      <Delivery/>
+      <DeliveryData/>
     </div>
   )
 }

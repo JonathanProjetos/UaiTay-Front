@@ -9,13 +9,17 @@ import { currentDate, currentHours } from "../../components/CurrenteDateAndHours
 import createOrder from "./createOrder";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import usePlacesAutocomplete, {
-  getGeocode,
-} from "use-places-autocomplete";
 
 function DeliveryData() {
   const router = useRouter();
-  const { order, total } = useContext(context);
+  const {
+    order,
+    total,
+    checkedDiscount,
+    discountPercent,
+    priceWithDiscount,
+    totalDiscounts,
+  } = useContext(context);
 
   const [customer, setCustomer] = useState("");
   const [address, setAddress] = useState("");
@@ -28,20 +32,6 @@ function DeliveryData() {
   const [discount, setDiscount] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
 
- /* const {
-    ready,
-    value: addressValue,
-    suggestions: { status, data },
-    setValue: setAddressValue,
-    clearSuggestions,
-  } = usePlacesAutocomplete({
-    requestOptions: {
-      componentRestrictions: { country: "br" },
-    },
-    debounce: 300,
-  });
-  */
-
   useEffect(() => {
     if (order.length === 0) {
       toast.error("Por gentileza, cadastre os produtos novamente.", {
@@ -49,50 +39,43 @@ function DeliveryData() {
         autoClose: 4000,
       });
       router.push("/");
+      return;
     }
 
-    if (customer && phone && address && number && district && city && complement && payment && discount) {
-      setIsDisabled(false);
-    } else {
-      setIsDisabled(true);
-    }
-  }, [order, customer, phone, address, number, district, city, complement, payment, discount]);
-
-  /*const handleSelect = async (description) => {
-    setAddressValue(description, false);
-    clearSuggestions();
-
-    const results = await getGeocode({ address: description });
-    const components = results[0].address_components;
-
-    const getComponent = (type) =>
-      components.find((c) => c.types.includes(type))?.long_name || "";
-
-    setAddress(description);
-    setDistrict(getComponent("sublocality") || getComponent("political"));
-    setCity(getComponent("administrative_area_level_2"));
-  };*/
+    setIsDisabled(!(customer && phone && address && number && district && city && payment));
+  }, [order, customer, phone, address, number, district, city, payment, router]);
 
   const generateOrder = async () => {
-    const convertNumber = Number(number);
+    if (isDisabled) {
+      toast.error("Preencha os dados obrigatórios do cliente.", {
+        position: "bottom-center",
+        autoClose: 4000,
+      });
+      return;
+    }
+
     const data = {
       customer,
       address,
-      number: convertNumber,
+      number: Number(number),
       district,
       city,
       complement,
       phone,
       payment,
-      discount,
+      discount: discount || (checkedDiscount ? "Sim" : "Não"),
+      checkedDiscount,
+      discountPercent: checkedDiscount ? Number(discountPercent) : 0,
+      totalDiscounts: checkedDiscount ? totalDiscounts : 0,
+      priceWithDiscount: checkedDiscount ? priceWithDiscount : total,
       order,
       total,
       date: currentDate(),
       hours: currentHours(),
     };
 
-    const result = await createOrder(data, isDisabled);
-    if (result && result.length > 0) {
+    const result = await createOrder(data);
+    if (result) {
       router.push(`/order`);
     }
   };
@@ -155,9 +138,9 @@ function DeliveryData() {
             sx={{ width: "5vw", marginBottom: "4vh", marginRight: "5vw" }}
             label="Número"
             variant="standard"
-            type="text"
+            type="number"
             value={number}
-            onChange={(e) => setNumber(Number(e.target.value))}
+            onChange={(e) => setNumber(e.target.value)}
           />
 
           <TextField
@@ -220,6 +203,7 @@ function DeliveryData() {
             backgroundColor: isDisabled ? "gray" : "#1976d2",
           }}
           onClick={generateOrder}
+          disabled={isDisabled}
         >
           <Typography
             sx={{

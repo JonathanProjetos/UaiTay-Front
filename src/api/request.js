@@ -5,18 +5,24 @@ const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
-export const requestLogin = async (email) => {
+const requestApi = async (callback) => {
   try {
-    const { data } = await api.post('login', {
-      email
-    })
-    
+    const { data } = await callback();
     return data;
-
   } catch (err) {
     return err;
   }
+};
 
+export const getApiErrorMessage = (err, fallback = 'Não foi possível concluir a operação.') => {
+  const status = err?.response?.status || 'Erro';
+  const message = err?.response?.data?.error || err?.message || fallback;
+
+  return `${status} | ${message}`;
+};
+
+export const requestLogin = async (email) => {
+  return requestApi(() => api.post('login', { email }));
 }
 
 export const verifyToken = async () => {
@@ -25,81 +31,44 @@ export const verifyToken = async () => {
 } 
 
 export const requestMenuProducts = async () => {
-  try {   
-    const { data } = await api.get('menu')
-    return data;
-  } catch (err) {
-    return err;
-  }
+  return requestApi(() => api.get('menu'));
 }
 
 export const createProduct = async (product) => {
-  try {
-    const { data } = await api.post('create-product', product);
-    return data;
-  } catch (err) {
-    return err;
-  }
+  return requestApi(() => api.post('create-product', product));
 }
 
 export const deleteProduct = async (name) => {
-  try {
-   const { data } = await api.delete(`delete-product`, { data: { name } } );
-   return data;
-  } catch (err) {
-    return err;
-  }
+  return requestApi(() => api.delete('delete-product', { data: { name } }));
 }
 
 export const updateProduct = async (product) => {
-  try {
-    const { data } = await api.patch(`update-product`, product);
-      return data;
-  } catch (err) {
-    return err;
-  }
+  return requestApi(() => api.patch('update-product', product));
 }
 
 export const createOrder = async (order) => {
-  try {
-    const { data } = await api.post('create-order', order);
-    return data;
-  } catch (err) {
-    return err;
-  }
+  return requestApi(() => api.post('create-order', order));
 }
 
 export const requestOrders = async () => {
-  try {
-    const { data } =  await api.get('orders');
-    return data;
-  } catch (err) {
-    return  err;
-  }
+  return requestApi(() => api.get('orders'));
 }
 
 export const requestOrder = async (id) => {
-  try {
-    const { data } = await api.get(`order/${id}`);
-    return data;
-  } catch (err) {
-    return err;
-  }
+  return requestApi(() => api.get(`order/${id}`));
 }
 
 export const getAddressForCep = async (cep) => {
   try {
-    if(Number(cep.length) <= 8) {
-      const { data } = await api.get(`https://viacep.com.br/ws/${cep}/json/`);
-      console.log(data);
+    if (String(cep).length <= 8) {
+      const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
       return data;
-    } else {
-      return 'CEP inválido';
     }
+
+    return 'CEP inválido';
   } catch (err) {
     return err;
   }
-
 }
 
 export default api;

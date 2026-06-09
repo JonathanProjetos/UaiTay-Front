@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useRouter } from 'next/navigation';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -12,13 +12,12 @@ import CheckBox from "@mui/material/Checkbox";
 import FormatControlLabel from "@mui/material/FormControlLabel";
 import { toast } from 'react-toastify'
 import context from "../../context/Context";
-
+import { groupProducts } from "../../util/orderHelpers";
 
 function Checkout() {
-
-  const { 
-    listProducts, 
-    setOrder, 
+  const {
+    listProducts,
+    setOrder,
     setTotal,
     setPriceWithDiscount,
     setTotalDiscounts,
@@ -29,131 +28,104 @@ function Checkout() {
   } = useContext(context)
 
   const router = useRouter()
-
   const [sum, setSum] = useState(0);
   const [list, setList] = useState([]);
   const [checked, setChecked] = useState(false);
-  // const [discountPercent, setDiscountPercent] = useState('');
 
-  function sumProducts(list) {
-    const sum = list.reduce((total, item) => {
-      return total + item.price;
-    },0)
-    
-    setSum(sum)
-  }
+  const calculateDiscount = useCallback((value, percent) => {
+    const discountedTotal = Number((value - (value * (percent / 100))).toFixed(2));
+    return {
+      discountedTotal,
+      discountValue: Number((value - discountedTotal).toFixed(2)),
+    };
+  }, []);
+
+  const updateDiscountValues = useCallback((value, isChecked = checked, percentValue = discountPercent) => {
+    const percent = Number(percentValue);
+
+    if (isChecked && percent > 0) {
+      const { discountedTotal, discountValue } = calculateDiscount(value, percent);
+      setPriceWithDiscount(discountedTotal);
+      setTotalDiscounts(discountValue);
+      return;
+    }
+
+    setPriceWithDiscount(value);
+    setTotalDiscounts(0);
+  }, [calculateDiscount, checked, discountPercent, setPriceWithDiscount, setTotalDiscounts])
 
   const deleteLastEnteredData = () => {
-    if (list.length > 0) {
-      // Apaga todos os itens do primeiro agrupado
-      const firstItemName = list[0].name;
-      const newList = list.filter(item => item.name !== firstItemName);
-      setList(newList);
-      setListProducts(newList);
-      sumProducts(newList);
-    }
+    if (list.length === 0) return;
+
+    const newList = list.slice(0, -1);
+    const newSum = newList.reduce((total, item) => total + item.price, 0);
+
+    setList(newList);
+    setListProducts(newList);
+    setSum(newSum);
+    updateDiscountValues(newSum);
   }
 
   const redirectAdditionalCustomerData = () => {
-    if(list.length === 0) {
+    if (list.length === 0) {
       toast.error('Não é possível gerar um pedido sem produtos.', {
         position: 'bottom-center',
         autoClose: 4000,
       })
-    } else {
-      toast.success('Pedido gerado com sucesso. Adicione agora os dados do cliente.', {
-        position: 'bottom-center',
-        autoClose: 4000,
-      })
-      setOrder(list)
-      setTotal(sum)
-      router.push('/delivery')
+      return;
     }
+
+    toast.success('Pedido gerado com sucesso. Adicione agora os dados do cliente.', {
+      position: 'bottom-center',
+      autoClose: 4000,
+    })
+    setOrder(list)
+    setTotal(sum)
+    router.push('/delivery')
   }
 
-  // Corrige o controle do checkbox para usar o valor do evento
   const checkDiscount = (isChecked) => {
     setChecked(isChecked);
     setCheckedDiscount(isChecked);
 
-    console.log(isChecked, "isChecked")
     if (!isChecked) {
       setDiscountPercent('');
       setPriceWithDiscount(sum);
       setTotalDiscounts(0);
-    } else {
-      // Quando marcado, aguarda o input do usuário
-      if (discountPercent > 0) {
-        const priceWithDiscount = Number(sum - (sum * (discountPercent / 100)));
-        const discountValue = Number((sum - priceWithDiscount).toFixed(2));
-        setPriceWithDiscount(priceWithDiscount);
-        setTotalDiscounts(discountValue);
-      }
+      return;
     }
+
+    updateDiscountValues(sum, true);
   };
 
   const handleDiscountInput = (e) => {
     const value = e.target.value;
     setDiscountPercent(value);
-    const percent = Number(value);
-    if (checked && percent > 0) {
-      const priceWithDiscount = Number(sum - (sum * (percent / 100)));
-      const discountValue = Number((sum - priceWithDiscount).toFixed(2));
-      setPriceWithDiscount(priceWithDiscount);
-      setTotalDiscounts(discountValue);
-    } else {
-      setPriceWithDiscount(sum);
-      setTotalDiscounts(0);
-    }
+    updateDiscountValues(sum, checked, value);
   };
 
-  // Função para agrupar itens iguais e somar valores
-  function groupProducts(products) {
-    const grouped = {};
-    products.forEach(item => {
-      if (!grouped[item.name]) {
-        grouped[item.name] = {
-          ...item,
-          count: 1,
-          totalPrice: item.price
-        };
-      } else {
-        grouped[item.name].count += 1;
-        grouped[item.name].totalPrice += item.price;
-      }
-    });
-    return Object.values(grouped);
-  }
-
-  // Função para decrementar quantidade de um item agrupado
   function handleDecrement(name) {
-    // Remove todos os itens do tipo selecionado, um por vez, até não restar nenhum
     const newList = [...list];
     const idx = newList.findIndex(item => item.name === name);
-    if (idx !== -1) {
-      newList.splice(idx, 1); // Remove o item clicado
-      setList(newList);
-      setListProducts(newList);
-      // Atualiza o valor total e o desconto
-      const newSum = newList.reduce((total, item) => total + item.price, 0);
-      setSum(newSum);
-      if (checked && discountPercent > 0) {
-        const priceWithDiscount = Number(newSum - (newSum * (discountPercent / 100)));
-        const discountValue = Number((newSum - priceWithDiscount).toFixed(2));
-        setPriceWithDiscount(priceWithDiscount);
-        setTotalDiscounts(discountValue);
-      } else {
-        setPriceWithDiscount(newSum);
-        setTotalDiscounts(0);
-      }
-    }
+
+    if (idx === -1) return;
+
+    newList.splice(idx, 1);
+    const newSum = newList.reduce((total, item) => total + item.price, 0);
+
+    setList(newList);
+    setListProducts(newList);
+    setSum(newSum);
+    updateDiscountValues(newSum);
   }
 
-  // Atualiza a lista e o valor total sempre que listProducts mudar (adicionar novo item)
   useEffect(() => {
+    const newSum = listProducts.reduce((total, item) => total + item.price, 0);
+
     setList(listProducts);
-    sumProducts(listProducts);
-  }, [listProducts]);
+    setSum(newSum);
+    updateDiscountValues(newSum);
+  }, [listProducts, updateDiscountValues]);
 
   return (
     <Box
@@ -170,7 +142,6 @@ function Checkout() {
     >
       <List
         sx={{
-
           position: 'fixed',
           top: '0',
           right: '0',
@@ -194,7 +165,7 @@ function Checkout() {
                   fontSize: '15px',
                 }}
               >
-                {`${i.count}x ${i.name} -  R$: ${i.totalPrice.toFixed(2).replace('.',',')}`}
+                {`${i.count}x ${i.name} -  R$: ${i.totalPrice.toFixed(2).replace('.', ',')}`}
               </ListItemText>
               {i.count > 1 && (
                 <ButtonBase
@@ -224,7 +195,7 @@ function Checkout() {
         }}
       >
         <FormatControlLabel
-          label='Adicionar disconto?'
+          label='Adicionar desconto?'
           sx={{
             display: 'flex',
             fontWeight: 'bold',
@@ -252,9 +223,9 @@ function Checkout() {
           }
         />
         {checked && (
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
             marginBottom: '20px',
             backgroundColor: 'red',
             borderRadius: '15px',
@@ -274,14 +245,15 @@ function Checkout() {
               Valor do desconto:
             </Typography>
             <Input
-              type="text"
+              type="number"
+              inputProps={{ min: 0, max: 100 }}
               value={discountPercent}
               onChange={handleDiscountInput}
               placeholder="% desconto"
               disableUnderline
               sx={{
                 color: 'white',
-                width: '2vw', // reduzido para aproximar do %
+                width: '4vw',
                 fontWeight: 'bold',
                 fontSize: '15px',
                 padding: '5px',
@@ -294,7 +266,7 @@ function Checkout() {
                 color: 'white',
                 fontWeight: 'bold',
                 fontSize: '15px',
-                marginLeft: '2px', // aproxima o % do input
+                marginLeft: '2px',
               }}
             >
               %.
@@ -304,21 +276,22 @@ function Checkout() {
 
         <ButtonBase
           sx={{
-          display: 'flex',
-          fontWeight: 'bold',
-          fontSize: '15px',
-          padding: '20px',
-          borderRadius: '20px',
-          backgroundColor: 'red',
-          color: 'white',
-          marginRight: '5px',
-          marginBottom: '20px',
-          width: '25vw',
-          marginLeft: '15px',
-        }}
+            display: 'flex',
+            fontWeight: 'bold',
+            fontSize: '15px',
+            padding: '20px',
+            borderRadius: '20px',
+            backgroundColor: 'red',
+            color: 'white',
+            marginRight: '5px',
+            marginBottom: '20px',
+            width: '25vw',
+            marginLeft: '15px',
+          }}
           onClick={deleteLastEnteredData}
+          disabled={list.length === 0}
         >
-        APAGAR
+          APAGAR
         </ButtonBase>
         <Box
           sx={{
@@ -331,44 +304,41 @@ function Checkout() {
             borderRadius: '20px',
           }}
         >
-        <Typography
-          sx={{
-          fontWeight: 'bold',
-          fontSize: '15px',
-          padding: '20px',
-          borderRadius: '20px',
-          backgroundColor: 'red',
-          width: '10vw',
-          color: 'white',
-          }}
-        >
-          {
-            checked && discountPercent > 0
-              ? `Total: R$${(sum - (sum * (discountPercent / 100))).toFixed(2).replace('.',',')}`
-              : `Total: R$${sum.toFixed(2).replace('.',',')}`
-          }
-        </Typography>
-        <ButtonBase
-          onClick={() => redirectAdditionalCustomerData()}
-        >
           <Typography
             sx={{
-            fontWeight: 'bold',
-            fontSize: '15px',
-            borderRadius: '20px',
-            backgroundColor: 'red',
-            color: 'white',
-            padding: '20px'
+              fontWeight: 'bold',
+              fontSize: '15px',
+              padding: '20px',
+              borderRadius: '20px',
+              backgroundColor: 'red',
+              width: '10vw',
+              color: 'white',
             }}
           >
-            Gerar Pedido
+            {
+              checked && Number(discountPercent) > 0
+                ? `Total: R$${calculateDiscount(sum, Number(discountPercent)).discountedTotal.toFixed(2).replace('.', ',')}`
+                : `Total: R$${sum.toFixed(2).replace('.', ',')}`
+            }
           </Typography>
-        </ButtonBase>
+          <ButtonBase onClick={redirectAdditionalCustomerData}>
+            <Typography
+              sx={{
+                fontWeight: 'bold',
+                fontSize: '15px',
+                borderRadius: '20px',
+                backgroundColor: 'red',
+                color: 'white',
+                padding: '20px'
+              }}
+            >
+              Gerar Pedido
+            </Typography>
+          </ButtonBase>
         </Box>
       </Box>
     </Box>
-  ); 
+  );
 }
-
 
 export default Checkout
