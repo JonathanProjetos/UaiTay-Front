@@ -19,10 +19,7 @@ function CardOrder({ data, index }) {
 
   return (
       <Card sx={{ maxWidth: 300 }}>
-        <CardMedia
-          sx={{ height: 130 }}
-          image={"https://drive.google.com/uc?export=view&id=1epaOB5JSqn_mQbZx4YCFUO0fKSGEUJ-H"}
-        />
+
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {data?.customer || 'Cliente sem nome'}
