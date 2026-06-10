@@ -24,6 +24,24 @@ export const formatCurrency = (value) => {
   return value.toFixed(2).replace('.', ',');
 };
 
+export const normalizeCurrencyValue = (value) => {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
+
+  const normalizedValue = String(value ?? '').replace(',', '.');
+  const numberValue = Number(normalizedValue);
+
+  return Number.isFinite(numberValue) ? numberValue : 0;
+};
+
+export const getOrderFinalTotal = (orderData = {}) => {
+  const hasDiscount = Boolean(orderData.checkedDiscount || orderData.discount === 'Sim');
+  const subtotal = hasDiscount
+    ? normalizeCurrencyValue(orderData.priceWithDiscount ?? orderData.total)
+    : normalizeCurrencyValue(orderData.total);
+
+  return subtotal + normalizeCurrencyValue(orderData.taxFee);
+};
+
 export const formatOrderDate = (date) => {
   if (!date) return '';
 
