@@ -12,7 +12,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import ButtonPrintOrder from '../orders/PrintOrder';
 import Context from '../../context/Context';
-import { formatCurrency, formatOrderDate } from '../../util/orderHelpers';
+import { formatCurrency, formatOrderDate, getOrderFinalTotal, normalizeCurrencyValue } from '../../util/orderHelpers';
 
 function OrderDetail() {
   const router = useRouter();
@@ -93,7 +93,10 @@ function OrderDetail() {
               {`Hora de entrada: ${order && order.hours}`}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {`Total: R$: ${formatCurrency(order?.total)}`}
+              {`Taxa de entrega: R$: ${formatCurrency(normalizeCurrencyValue(order?.taxFee))}`}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {`Total: R$: ${formatCurrency(getOrderFinalTotal(order))}`}
             </Typography>
           </CardContent>
           <CardActions

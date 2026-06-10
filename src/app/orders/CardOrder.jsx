@@ -9,13 +9,13 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ButtonPrintOrder from './PrintOrder';
 import OrderDetailsModal from './OrderDetailsModal';
-import { formatCurrency, formatOrderDate } from '@/util/orderHelpers';
+import { formatCurrency, formatOrderDate, getOrderFinalTotal } from '@/util/orderHelpers';
 
 function CardOrder({ data, index }) {
   const [isDetailsOpen, setIsDetailsOpen] = React.useState(false);
-  const { date, hours, total } = data
+  const { date, hours } = data
   const formattedDate = formatOrderDate(date);
-  const formattedTotal = formatCurrency(total);
+  const formattedTotal = formatCurrency(getOrderFinalTotal(data));
 
   return (
       <Card sx={{ maxWidth: 300 }}>

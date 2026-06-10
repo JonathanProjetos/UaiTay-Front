@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import ButtonBase from '@mui/material/ButtonBase';
 import PrintIcon from '@mui/icons-material/Print';
 import context from '@/context/Context';
-import { escapeHtml, formatCurrency, groupProducts } from '@/util/orderHelpers';
+import { escapeHtml, formatCurrency, groupProducts, normalizeCurrencyValue } from '@/util/orderHelpers';
 
 function PrintOrder({ orderData }) {
   const {
@@ -25,6 +25,7 @@ function PrintOrder({ orderData }) {
     hours,
     order,
     total,
+    taxFee,
     checkedDiscount: orderCheckedDiscount,
     discountPercent: orderDiscountPercent,
     totalDiscounts: orderTotalDiscounts,
@@ -34,7 +35,9 @@ function PrintOrder({ orderData }) {
   const hasDiscount = checkedDiscount || orderCheckedDiscount;
   const resolvedDiscountPercent = hasDiscount ? (discountPercent || orderDiscountPercent || 0) : 0;
   const resolvedDiscounts = hasDiscount ? (totalDiscounts || orderTotalDiscounts || 0) : 0;
-  const resolvedTotal = hasDiscount ? (priceWithDiscount || orderPriceWithDiscount || total) : total;
+  const resolvedTaxFee = normalizeCurrencyValue(taxFee);
+  const resolvedSubtotal = hasDiscount ? (priceWithDiscount || orderPriceWithDiscount || total) : total;
+  const resolvedTotal = normalizeCurrencyValue(resolvedSubtotal) + resolvedTaxFee;
 
   const generateReceiptHTML = () => {
     return `
@@ -73,12 +76,15 @@ function PrintOrder({ orderData }) {
             <div>Soma dos produtos: R$: ${formatCurrency(total)}</div><br>
             <div>Desconto: ${escapeHtml(resolvedDiscountPercent)}%.</div><br>
             <div>Valor descontado: R$: ${formatCurrency(resolvedDiscounts)}</div><br>
+            <div>Subtotal: R$: ${formatCurrency(normalizeCurrencyValue(resolvedSubtotal))}</div><br>
+            <div>Taxa de entrega: R$: ${formatCurrency(resolvedTaxFee)}</div><br>
             <div>Total: R$: ${formatCurrency(resolvedTotal)}</div><br>
           ` : `
             <div>Soma dos produtos: R$: ${formatCurrency(total)}</div><br>
             <div>Desconto: 0%.</div><br>
             <div>Valor descontado: R$: 00,00</div><br>
-            <div>Total: R$: ${formatCurrency(total)}</div><br>
+            <div>Taxa de entrega: R$: ${formatCurrency(resolvedTaxFee)}</div><br>
+            <div>Total: R$: ${formatCurrency(resolvedTotal)}</div><br>
           `}
           <div>---------------------------------------</div><br>
           <div>Este é um cupom para simples conferência e não possui valor legal.</div><br>

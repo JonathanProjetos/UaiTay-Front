@@ -9,6 +9,7 @@ import { currentDate, currentHours } from "../../components/CurrenteDateAndHours
 import createOrder from "./createOrder";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { normalizeCurrencyValue } from "../../util/orderHelpers";
 
 function DeliveryData() {
   const router = useRouter();
@@ -31,6 +32,7 @@ function DeliveryData() {
   const [payment, setPayment] = useState("");
   const [discount, setDiscount] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
+  const [taxFee, setTaxFee] = useState("");
 
   useEffect(() => {
     if (order.length === 0) {
@@ -70,6 +72,7 @@ function DeliveryData() {
       priceWithDiscount: checkedDiscount ? priceWithDiscount : total,
       order,
       total,
+      taxFee: normalizeCurrencyValue(taxFee),
       date: currentDate(),
       hours: currentHours(),
     };
@@ -79,6 +82,20 @@ function DeliveryData() {
       router.push(`/order`);
     }
   };
+
+  const formatPhone = (value) => {
+  const digits = value.replace(/\D/g, '').slice(0, 11);
+
+  if (digits.length <= 2) {
+    return digits;
+  }
+
+  if (digits.length <= 7) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  }
+
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+};
 
   return (
     <Box
@@ -120,7 +137,7 @@ function DeliveryData() {
           placeholder="(xx) xxxxx-xxxx"
           variant="standard"
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={(e) => setPhone(formatPhone(e.target.value))}
         />
 
         <Box sx={{ display: "flex", flexWrap: "wrap", width: "50vw" }}>
@@ -158,6 +175,17 @@ function DeliveryData() {
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
+
+          <TextField
+            sx={{ width: "15vw", marginBottom: "4vh", marginLeft: "5vw" }}
+            label="Taxa de entrega"
+            variant="standard"
+            type="number"
+            inputProps={{ min: 0, step: "0.01" }}
+            //placeholder="Sim ou não"
+            value={taxFee}
+            onChange={(e) => setTaxFee(e.target.value)}
+          />
         </Box>
 
         <Box sx={{ display: "flex", justifyContent: "flex-start", flexWrap: "wrap" }}>
@@ -178,6 +206,7 @@ function DeliveryData() {
             value={discount}
             onChange={(e) => setDiscount(e.target.value)}
           />
+
         </Box>
 
         <TextField
@@ -188,6 +217,7 @@ function DeliveryData() {
           value={complement}
           onChange={(e) => setComplement(e.target.value)}
         />
+
       </Box>
 
       <Box>

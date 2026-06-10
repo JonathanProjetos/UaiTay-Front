@@ -15,7 +15,13 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import { requestOrder } from '@/api/request';
-import { formatCurrency, formatOrderDate, groupProducts } from '@/util/orderHelpers';
+import {
+  formatCurrency,
+  formatOrderDate,
+  getOrderFinalTotal,
+  groupProducts,
+  normalizeCurrencyValue,
+} from '@/util/orderHelpers';
 
 const knownFields = new Set([
   '_id',
@@ -36,6 +42,7 @@ const knownFields = new Set([
   'discountPercent',
   'totalDiscounts',
   'priceWithDiscount',
+  'taxFee',
   'status',
   '__v',
 ]);
@@ -110,6 +117,7 @@ function OrderDetailsModal({ orderData, open, onClose }) {
   const groupedItems = useMemo(() => groupProducts(order?.order || []), [order?.order]);
   const hasDiscount = Boolean(order?.checkedDiscount || order?.discount === 'Sim');
   const totalWithDiscount = hasDiscount ? order?.priceWithDiscount : order?.total;
+  const taxFee = normalizeCurrencyValue(order?.taxFee);
   const extraFields = Object.entries(order || {}).filter(([key]) => !knownFields.has(key));
 
   return (
@@ -200,7 +208,9 @@ function OrderDetailsModal({ orderData, open, onClose }) {
               <DetailLine label="Soma dos produtos" value={`R$: ${formatCurrency(order?.total)}`} />
               <DetailLine label="Desconto" value={hasDiscount ? `${formatValue(order?.discountPercent || 0)}%` : '0%'} />
               <DetailLine label="Valor descontado" value={`R$: ${formatCurrency(order?.totalDiscounts)}`} />
-              <DetailLine label="Total" value={`R$: ${formatCurrency(totalWithDiscount)}`} />
+              <DetailLine label="Subtotal" value={`R$: ${formatCurrency(normalizeCurrencyValue(totalWithDiscount))}`} />
+              <DetailLine label="Taxa de entrega" value={`R$: ${formatCurrency(taxFee)}`} />
+              <DetailLine label="Total" value={`R$: ${formatCurrency(getOrderFinalTotal(order))}`} />
             </Box>
 
             {extraFields.length > 0 && (
