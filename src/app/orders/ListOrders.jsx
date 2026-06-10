@@ -5,6 +5,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
+import TablePagination from '@mui/material/TablePagination'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ButtonBase from '@mui/material/ButtonBase';
 import { requestOrders } from '../../api/request'
@@ -50,9 +51,8 @@ const phoneMatches = (phone, filter) => {
 };
 
 const getOrderKey = (item, fallback) => {
-  if (typeof item?._id === 'string') return item._id;
-  if (item?._id?.$oid) return item._id.$oid;
-  return fallback;
+  const id = typeof item?._id === 'string' ? item._id : item?._id?.$oid;
+  return `${id || 'pedido'}-${fallback}`;
 };
 
 const normalizeDate = (value) => {
@@ -76,9 +76,12 @@ function ListOrders() {
     phone: '',
     orderNumber: '',
   })
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
 
   const  router = useRouter();
   const orders = useMemo(() => (Array.isArray(data) ? data : []), [data]);
+  const selectedRowsPerPage = Number(rowsPerPage);
 
   const getAllOrders = async () => {
     const response = await requestOrders()
@@ -112,11 +115,25 @@ function ListOrders() {
     });
   }, [filters, ordersWithNumber]);
 
+  const paginatedOrders = useMemo(() => {
+    const startIndex = page * selectedRowsPerPage;
+    return filteredOrders.slice(startIndex, startIndex + selectedRowsPerPage);
+  }, [filteredOrders, page, selectedRowsPerPage]);
+
+  useEffect(() => {
+    const lastPage = Math.max(0, Math.ceil(filteredOrders.length / selectedRowsPerPage) - 1);
+
+    if (page > lastPage) {
+      setPage(lastPage);
+    }
+  }, [filteredOrders.length, page, selectedRowsPerPage]);
+
   const handleFilterChange = (field) => (event) => {
     setFilters((currentFilters) => ({
       ...currentFilters,
       [field]: event.target.value,
     }));
+    setPage(0);
   };
 
   const clearFilters = () => {
@@ -126,10 +143,20 @@ function ListOrders() {
       phone: '',
       orderNumber: '',
     });
+    setPage(0);
+  };
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(Number(event.target.value));
+    setPage(0);
   };
 
   return (
-    <Box>
+    <Box sx={{ paddingBottom: '80px' }}>
       <Box
         sx={{
           display: 'flex',
@@ -164,6 +191,7 @@ function ListOrders() {
           display: 'flex',
           justifyContent: 'center',
           marginBottom: '2vh',
+          width: '100%',
         }}
       >
         <Box
@@ -172,7 +200,9 @@ function ListOrders() {
             alignItems: 'center',
             flexWrap: 'wrap',
             gap: 2,
-            width: '90vw',
+            marginTop: '30px',
+            marginBottom: '30px',
+            //width: '90vw',
           }}
         >
           <TextField
@@ -211,27 +241,31 @@ function ListOrders() {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          width: '100%',
         }}
       >
       {
         orders.length > 0 && filteredOrders.length > 0? (
           <Box
+            key={`orders-page-${page}-${selectedRowsPerPage}-${filteredOrders.length}`}
             sx={{
               display: 'flex',
-              justifyContent: 'space-around',
+              justifyContent: 'center',
               flexWrap: 'wrap',
               alignItems: 'center',
-              width: '90vw',
+              gap: 2,
+              width: '100%',
+              maxWidth: '1200px',
+              margin: '0 auto',
             }}
           >
             {
-              filteredOrders.map(({ item, originalIndex }) => (
+              paginatedOrders.map(({ item, originalIndex }) => (
                 <Box
                   sx={{
                     display: 'flex',
                     flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    padding: '10px',
+                    justifyContent: 'center',
                   }} 
                     key={getOrderKey(item, originalIndex)}
                 >
@@ -258,6 +292,71 @@ function ListOrders() {
       }
        
       </Box>
+      {orders.length > 0 && (
+        <Box
+          sx={{
+            position: 'fixed',
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 10,
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '100%',
+            backgroundColor:'#1976d2',
+            color: 'white',
+            boxShadow: '0 -2px 8px rgba(0, 0, 0, 0.18)',
+          }}
+        >
+          <TablePagination
+            sx={{
+              color: 'white',
+              width: '100%',
+              '& .MuiTablePagination-toolbar': {
+                position: 'relative',
+                minHeight: '64px',
+                paddingLeft: '24px',
+                paddingRight: '24px',
+              },
+              '& .MuiTablePagination-spacer': {
+                display: 'none',
+              },
+              '& .MuiTablePagination-selectLabel': {
+                margin: 0,
+              },
+              '& .MuiTablePagination-input': {
+                marginRight: 'auto',
+              },
+              '& .MuiTablePagination-displayedRows': {
+                position: 'absolute',
+                left: '50%',
+                transform: 'translateX(-120%)',
+                margin: 0,
+              },
+              '& .MuiTablePagination-actions': {
+                position: 'absolute',
+                left: '50%',
+                transform: 'translateX(15%)',
+                marginLeft: 0,
+              },
+              '& .MuiSvgIcon-root': {
+                color: 'white',
+              },
+            }}
+            component="div"
+            count={filteredOrders.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={[10, 20, 30]}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleRowsPerPageChange}
+            labelRowsPerPage="Itens por pagina"
+            labelDisplayedRows={({ count, page }) => (
+              `Pagina ${page + 1} de ${Math.max(1, Math.ceil(count / selectedRowsPerPage))}`
+            )}
+          />
+        </Box>
+      )}
     </Box>
   )
 }
