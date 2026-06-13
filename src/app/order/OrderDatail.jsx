@@ -1,6 +1,6 @@
 "use client"
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { requestOrder } from '../../api/request'
+import { requestChineseFoodImage, requestOrder } from '../../api/request'
 import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -11,14 +11,18 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import ButtonPrintOrder from '../orders/PrintOrder';
+import OrderDetailsModal from '../orders/OrderDetailsModal';
 import Context from '../../context/Context';
-import { formatCurrency, formatOrderDate, getOrderFinalTotal, normalizeCurrencyValue } from '../../util/orderHelpers';
+import { formatCurrency, formatOrderDate, getOrderFinalTotal, getOrderIdValue, normalizeCurrencyValue } from '../../util/orderHelpers';
 
 function OrderDetail() {
   const router = useRouter();
   const { setCheckedDiscount, setDiscountPercent } = useContext(Context);
 
   const [order, setOrder] = useState({})
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+  const [foodImage, setFoodImage] = useState('')
+  const orderId = getOrderIdValue(order?._id);
 
   const getOrder = useCallback(async () => {
     const idOrder = JSON.parse(localStorage.getItem('orderId')) || ''
@@ -37,13 +41,33 @@ function OrderDetail() {
     getOrder()
   }, [getOrder])
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadFoodImage = async () => {
+      const image = await requestChineseFoodImage(orderId);
+
+      if (isMounted) {
+        setFoodImage(image);
+      }
+    };
+
+    loadFoodImage();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [orderId]);
+
   return (
     <Box
       sx={{
         display: 'flex',
-        justifyContent: 'center',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        width: '100vw',
+        width: '100%',
+        minHeight: '100vh',
       }}
     >
       <Box
@@ -51,9 +75,9 @@ function OrderDetail() {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          flexWrap: 'wrap',
-          width: '100vw',
-          marginBottom: '10vh',
+          width: '100%',
+          minHeight: '72px',
+          marginBottom: { xs: '32px', md: '56px' },
           backgroundColor: '#1976d2',
         }}
       >
@@ -61,8 +85,8 @@ function OrderDetail() {
           sx={{
             color: 'white',
             fontWeight: 'bold',
-            fontSize: '4vh',
-            marginLeft: '3vw',
+            fontSize: { xs: '28px', md: '36px' },
+            textAlign: 'center',
           }}
         >
           Pedido
@@ -74,13 +98,14 @@ function OrderDetail() {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          flexWrap: 'wrap',
+          width: '100%',
+          paddingX: 2,
         }}
       >
-        <Card sx={{ width: 400 }}>
+        <Card sx={{ width: '100%', maxWidth: 400 }}>
           <CardMedia
             sx={{ height: 130 }}
-            image={"https://drive.google.com/uc?export=view&id=1epaOB5JSqn_mQbZx4YCFUO0fKSGEUJ-H"}
+            image={foodImage || 'https://www.themealdb.com/images/media/meals/1529444830.jpg'}
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
@@ -105,12 +130,26 @@ function OrderDetail() {
           <CardActions
             sx={{
               display: 'flex',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingX: 2,
+              paddingBottom: 2,
             }}
           >
-            <Button size="small">Detalhes</Button>
+            <Button
+              size="small"
+              onClick={() => setIsDetailsOpen(true)}
+              disabled={!order?._id}
+            >
+              Detalhes
+            </Button>
             <ButtonPrintOrder orderData={order} />
           </CardActions>
+          <OrderDetailsModal
+            orderData={order}
+            open={isDetailsOpen}
+            onClose={() => setIsDetailsOpen(false)}
+          />
         </Card>
       </Box>
       <Box
@@ -118,54 +157,55 @@ function OrderDetail() {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          width: '100vw',
-          marginTop: '10vh',
+          gap: 2,
+          width: '100%',
+          marginTop: { xs: '32px', md: '56px' },
+          paddingBottom: 4,
         }}
       >
-      <ButtonBase
-        sx={{
-          width: '110px',
-          height: '60px',
-          borderRadius: '5px',
-          marginRight: '10vh',
-          backgroundColor: '#1976d2',
-        }}
-        onClick={() => {
-          setCheckedDiscount(false);
-          setDiscountPercent('');
-          router.push('/');
-        }}
-      >
-        <Typography
+        <ButtonBase
           sx={{
-            fontSize: '15px',
-            fontWeight: 'bold',
-            color: 'white',
+            width: '110px',
+            height: '60px',
+            borderRadius: '5px',
+            backgroundColor: '#1976d2',
+          }}
+          onClick={() => {
+            setCheckedDiscount(false);
+            setDiscountPercent('');
+            router.push('/');
           }}
         >
-          Inicio
-        </Typography>
-      </ButtonBase>
-      <ButtonBase
-        sx={{
-          width: '110px',
-          height: '60px',
-          borderRadius: '5px',
-          padding: '10px',
-          backgroundColor: '#1976d2',
-        }}
-      >
-        <Typography
+          <Typography
+            sx={{
+              fontSize: '15px',
+              fontWeight: 'bold',
+              color: 'white',
+            }}
+          >
+            Inicio
+          </Typography>
+        </ButtonBase>
+        <ButtonBase
           sx={{
-            fontSize: '15px',
-            fontWeight: 'bold',
-            color: 'white',
+            width: '110px',
+            height: '60px',
+            borderRadius: '5px',
+            padding: '10px',
+            backgroundColor: '#1976d2',
           }}
           onClick={() => router.push('/orders')}
         >
-          Todos os pedidos
-        </Typography>
-      </ButtonBase>
+          <Typography
+            sx={{
+              fontSize: '15px',
+              fontWeight: 'bold',
+              color: 'white',
+            }}
+          >
+            Todos os pedidos
+          </Typography>
+        </ButtonBase>
       </Box>
     </Box>
   )

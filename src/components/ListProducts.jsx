@@ -66,6 +66,7 @@ function ListProducts({ products = [] }) {
                   component="div"
                   sx={{
                     fontWeight: 'bold',
+                    //fontSize: '15px',
                   }}
                 >
                   {data.name}

@@ -54,3 +54,10 @@ export const escapeHtml = (value) => String(value ?? '')
   .replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;')
   .replace(/'/g, '&#039;');
+
+export const getOrderIdValue = (id) => {
+  if (!id) return 'uaitay';
+  if (typeof id === 'string') return id;
+  if (typeof id === 'object' && id.$oid) return id.$oid;
+  return String(id);
+};
