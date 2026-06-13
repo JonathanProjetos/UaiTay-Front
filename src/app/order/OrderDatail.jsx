@@ -23,11 +23,14 @@ function OrderDetail() {
   const getOrder = useCallback(async () => {
     const idOrder = JSON.parse(localStorage.getItem('orderId')) || ''
     const data = await requestOrder(idOrder)
-    setOrder(data)
 
-    if(data === null || !data._id) {
+    if (!data || data?.response || !data._id) {
+      setOrder({})
       router.push('/')
+      return
     }
+
+    setOrder(data)
   }, [router])
 
   useEffect(() => {
