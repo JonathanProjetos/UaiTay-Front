@@ -4,7 +4,7 @@ import PrintIcon from '@mui/icons-material/Print';
 import context from '@/context/Context';
 import { escapeHtml, formatCurrency, groupProducts, normalizeCurrencyValue } from '@/util/orderHelpers';
 
-function PrintOrder({ orderData }) {
+function PrintOrder({ orderData = {} }) {
   const {
     priceWithDiscount,
     totalDiscounts,
@@ -30,7 +30,7 @@ function PrintOrder({ orderData }) {
     discountPercent: orderDiscountPercent,
     totalDiscounts: orderTotalDiscounts,
     priceWithDiscount: orderPriceWithDiscount,
-  } = orderData
+  } = orderData || {}
 
   const hasDiscount = checkedDiscount || orderCheckedDiscount;
   const resolvedDiscountPercent = hasDiscount ? (discountPercent || orderDiscountPercent || 0) : 0;

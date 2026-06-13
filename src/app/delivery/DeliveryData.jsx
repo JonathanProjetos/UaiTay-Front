@@ -10,6 +10,21 @@ import createOrder from "./createOrder";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { normalizeCurrencyValue } from "../../util/orderHelpers";
+import { requestCustomerDataByPhone } from "../../api/request";
+
+const normalizePhone = (value) => String(value ?? "").replace(/\D/g, "");
+
+const hasValue = (value) => value !== undefined && value !== null && value !== "";
+
+const fillEmptyField = (currentValue, nextValue) => (
+  hasValue(currentValue) || !hasValue(nextValue) ? currentValue : String(nextValue)
+);
+
+const formatDiscountFieldValue = (value) => {
+  if (!hasValue(value)) return "";
+
+  return normalizeCurrencyValue(value) > 0 ? "Sim" : "Nao";
+};
 
 function DeliveryData() {
   const router = useRouter();
@@ -46,6 +61,40 @@ function DeliveryData() {
 
     setIsDisabled(!(customer && phone && address && number && district && city && payment));
   }, [order, customer, phone, address, number, district, city, payment, router]);
+
+  useEffect(() => {
+    const normalizedPhone = normalizePhone(phone);
+
+    if (normalizedPhone.length < 10) {
+      return;
+    }
+
+    let isActive = true;
+
+    const getCustomerData = async () => {
+      const customerData = await requestCustomerDataByPhone(normalizedPhone);
+
+      if (!isActive || !customerData || customerData?.response) {
+        return;
+      }
+
+      setCustomer((value) => fillEmptyField(value, customerData.name));
+      setAddress((value) => fillEmptyField(value, customerData.address));
+      setNumber((value) => fillEmptyField(value, customerData.number));
+      setDistrict((value) => fillEmptyField(value, customerData.neighborhood));
+      setCity((value) => fillEmptyField(value, customerData.city));
+      setTaxFee((value) => fillEmptyField(value, normalizeCurrencyValue(customerData.deliveryFee)));
+      setPayment((value) => fillEmptyField(value, customerData.paymentMethod));
+      setDiscount((value) => fillEmptyField(value, formatDiscountFieldValue(customerData.discount)));
+      setComplement((value) => fillEmptyField(value, customerData.referencePoint));
+    };
+
+    getCustomerData();
+
+    return () => {
+      isActive = false;
+    };
+  }, [phone]);
 
   const generateOrder = async () => {
     if (isDisabled) {
