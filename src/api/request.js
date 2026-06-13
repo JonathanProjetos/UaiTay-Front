@@ -62,6 +62,40 @@ export const requestCustomerDataByPhone = async (phone) => {
   return requestApi(() => api.get('orders/customer-data', { params: { phone } }));
 }
 
+let chineseFoodImagesRequest = null;
+
+const getSeedIndex = (seed, length) => {
+  const seedText = String(seed || 'uaitay');
+  const index = seedText.split('').reduce((total, letter) => (
+    ((total * 31) + letter.charCodeAt(0)) >>> 0
+  ), 0);
+
+  return index % length;
+};
+
+export const requestChineseFoodImage = async (seed, preferredIndex) => {
+  try {
+    if (!chineseFoodImagesRequest) {
+      chineseFoodImagesRequest = axios
+        .get('https://www.themealdb.com/api/json/v1/1/filter.php?a=Chinese')
+        .then(({ data }) => (Array.isArray(data?.meals) ? data.meals : []));
+    }
+
+    const meals = await chineseFoodImagesRequest;
+
+    if (!meals.length) return '';
+
+    const imageIndex = Number.isInteger(preferredIndex)
+      ? preferredIndex % meals.length
+      : getSeedIndex(seed, meals.length);
+
+    return meals[imageIndex]?.strMealThumb || '';
+  } catch (_err) {
+    chineseFoodImagesRequest = null;
+    return '';
+  }
+}
+
 export const getAddressForCep = async (cep) => {
   try {
     if (String(cep).length <= 8) {

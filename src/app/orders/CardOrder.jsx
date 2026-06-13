@@ -9,17 +9,41 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ButtonPrintOrder from './PrintOrder';
 import OrderDetailsModal from './OrderDetailsModal';
-import { formatCurrency, formatOrderDate, getOrderFinalTotal } from '@/util/orderHelpers';
+import { requestChineseFoodImage } from '@/api/request';
+import { formatCurrency, formatOrderDate, getOrderFinalTotal, getOrderIdValue } from '@/util/orderHelpers';
 
 function CardOrder({ data, index }) {
   const [isDetailsOpen, setIsDetailsOpen] = React.useState(false);
+  const [foodImage, setFoodImage] = React.useState('');
   const { date, hours } = data
-  const formattedDate = formatOrderDate(date);
+  const formattedDate = formatOrderDate(date);  
   const formattedTotal = formatCurrency(getOrderFinalTotal(data));
+  const orderId = getOrderIdValue(data?._id);
+
+  React.useEffect(() => {
+    let isMounted = true;
+
+    const loadFoodImage = async () => {
+      const image = await requestChineseFoodImage(orderId, index);
+
+      if (isMounted) {
+        setFoodImage(image);
+      }
+    };
+
+    loadFoodImage();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [index, orderId]);
 
   return (
-      <Card sx={{ maxWidth: 300 }}>
-
+      <Card sx={{ width: '100%', maxWidth: 300 }}>
+        <CardMedia
+          sx={{ height: 130 }}
+          image={foodImage || 'https://www.themealdb.com/images/media/meals/1529444830.jpg'}
+        />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {data?.customer || 'Cliente sem nome'}

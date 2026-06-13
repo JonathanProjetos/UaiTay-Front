@@ -264,7 +264,6 @@ function ListOrders() {
                 <Box
                   sx={{
                     display: 'flex',
-                    flexDirection: 'row',
                     justifyContent: 'center',
                   }} 
                     key={getOrderKey(item, originalIndex)}
